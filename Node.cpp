@@ -14,7 +14,7 @@ using ifstream = std::ifstream;
 
 typedef struct Table
 {
-	int NodeID, Distance;
+	int NodeID, Weight;
 };
 
 class Node
@@ -38,11 +38,11 @@ public:
 
 	int GetCapacity() { return Capacity; }
 
-	void AddConnection(Node* n, int distance)
+	void AddConnection(Node* n, int weight)
 	{
 		if (Capacity != MAX)
 		{
-			Connect[Capacity] = new Connection(n, distance);
+			Connect[Capacity] = new Connection(n, weight);
 			Capacity++;
 		}
 	};
@@ -53,7 +53,7 @@ public:
 		for (int i = 0; i < Capacity; i++)
 		{
 			Table[i].NodeID = Connect[i]->GetID();
-			Table[i].Distance = Connect[i]->GetDistance();
+			Table[i].Weight = Connect[i]->GetWeight();
 		}
 	}
 
@@ -65,15 +65,15 @@ private:
 	class Connection
 	{
 	public:
-		Connection(Node* n, int distance) { Neighbor = n; Distance = distance; }
-		Connection() { Neighbor = 0; Distance = 0; }
+		Connection(Node* n, int weight) { Neighbor = n; Weight = weight; }
+		Connection() { Neighbor = 0; Weight = 0; }
 
-		int GetDistance() { return Distance; }
+		int GetWeight() { return Weight; }
 
 		int GetID() { return Neighbor->ID; }
 	private:
 		Node* Neighbor;
-		int Distance;
+		int Weight;
 	};
 
 	Connection* Connect[MAX];

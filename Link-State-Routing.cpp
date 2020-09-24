@@ -5,7 +5,7 @@
 int main()
 {
 
-	// Test the first two nodes 
+	// Initiliaze nodes 
 	Node Node1(1); // Node 1
 	Node Node2(2); // Node 2
 	Node Node3(3); // Node 3
@@ -13,6 +13,7 @@ int main()
 	Node Node5(5); // Node 5
 	Node Node6(6); // Node 6
 	Node Node7(7); // Node 7
+
 
 	Node1.AddConnection(&Node2, 5);
 	Node1.AddConnection(&Node3, 10);
@@ -24,6 +25,6 @@ int main()
 	cout << "Node " << Node1.ID << " is connected to:" << endl;
 	for (int i = 0; i < Node1.GetCapacity(); i++)
 	{
-		cout << "	- Node " << Node1Table[i].NodeID << ", distance: " << Node1Table[i].Distance << endl;
+		cout << "	- Node " << Node1Table[i].NodeID << ", distance: " << Node1Table[i].Weight << endl;
 	}
 }
