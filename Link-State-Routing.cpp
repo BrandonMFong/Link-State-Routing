@@ -13,40 +13,56 @@ using ifstream = std::ifstream;
 
 //#define MAXCONNECTIONS 10;
 
+struct Table
+{
+	int NodeID, Distance;
+};
+
 class Node
 {
 	public:
 		int ID;
+		static const int MAX = 10;
 
 		// Constructors
 		Node() 
 		{
 			ID = 0;
-			//Connect = 0;
+			InitConnect();
 		}; 
 
 		Node(int val)
 		{
 			ID = val;
-			//Connect = 0;
+			InitConnect();
 		};
+
+		int GetCapacity() { return Capacity; }
 
 		void AddConnection(Node * n, int distance)
 		{
-			if (Capacity != MaxConnections)
+			if (Capacity != MAX)
 			{
-				Connect = new Connection(n, distance);
+				Connect[Capacity] = new Connection(n, distance);
 				Capacity++;
 			}
 		};
 
-		int GetDistance()
+		void GetTable(struct Table* Table)
 		{
-			return Connect->GetDistance();
+
+			for (int i = 0; i < Capacity; i++)
+			{
+				Table[i].NodeID = Connect[i]->GetID();
+				Table[i].Distance = Connect[i]->GetDistance();
+			}
 		}
+
+		// This is a static approach
+		int GetNumberOfConnections() { return Capacity; }
+
 	private:
 		int Capacity = 0;
-		int MaxConnections = 10;
 		class Connection
 		{
 			public:
@@ -61,23 +77,27 @@ class Node
 				int Distance;
 		};
 
-		Connection * Connect = new Connection[MaxConnections];
+		Connection * Connect[MAX];
 
-
+		void InitConnect() { for (int i = 0; i < MAX; i++) { Connect[i] = new Connection(); } }
 };
 
 int main()
 {
+	// Test the first two nodes 
 	Node Node1(1); // Node 1
 	Node Node2(2); // Node 2
-
-	cout << "We have Node 1 with ID: " << Node1.ID << endl;
-	cout << "We have Node 2 with ID: " << Node2.ID << endl;
+	Node Node3(3); // Node 3
 
 	Node1.AddConnection(&Node2, 5);
-	cout << "Node " << Node1.ID << " is connected to Node " << Node2.ID << " with a distance of " << Node1.GetDistance() << endl;
+	Node1.AddConnection(&Node3, 10);
 
-	Node2.AddConnection(&Node1, 5);
-	cout << "Node " << Node2.ID << " is connected to Node " << Node1.ID << " with a distance of " << Node2.GetDistance() << endl;
+	struct Table Node1Table[Node1.MAX];
+	Node1.GetTable(Node1Table);
 
+	cout << "Node " << Node1.ID << " is connected to:" << endl;
+	for (int i = 0; i < Node1.GetCapacity(); i++)
+	{
+		cout << "	- Node " << Node1Table[i].NodeID << ", distance: " << Node1Table[i].Distance << endl;
+	}
 }
