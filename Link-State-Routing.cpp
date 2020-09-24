@@ -11,7 +11,7 @@ using namespace std;
 using json = nlohmann::json;
 using ifstream = std::ifstream;
 
-#define MaxConnections 10;
+//#define MAXCONNECTIONS 10;
 
 class Node
 {
@@ -22,18 +22,22 @@ class Node
 		Node() 
 		{
 			ID = 0;
-			Connect = 0;
+			//Connect = 0;
 		}; 
 
 		Node(int val)
 		{
 			ID = val;
-			Connect = 0;
+			//Connect = 0;
 		};
 
 		void AddConnection(Node * n, int distance)
 		{
-			Connect = new Connection(n, distance);
+			if (Capacity != MaxConnections)
+			{
+				Connect = new Connection(n, distance);
+				Capacity++;
+			}
 		};
 
 		int GetDistance()
@@ -41,10 +45,13 @@ class Node
 			return Connect->GetDistance();
 		}
 	private:
+		int Capacity = 0;
+		int MaxConnections = 10;
 		class Connection
 		{
 			public:
 				Connection(Node* n, int distance) { Neighbor = n; Distance = distance; }
+				Connection() { Neighbor = 0; Distance = 0; }
 
 				int GetDistance() { return Distance; }
 
@@ -54,7 +61,7 @@ class Node
 				int Distance;
 		};
 
-		Connection * Connect;
+		Connection * Connect = new Connection[MaxConnections];
 
 
 };
@@ -68,5 +75,9 @@ int main()
 	cout << "We have Node 2 with ID: " << Node2.ID << endl;
 
 	Node1.AddConnection(&Node2, 5);
-	cout << "Node " << Node1.ID << " is connected to Node " << Node2.ID << " with a distance of " << Node1.GetDistance();
+	cout << "Node " << Node1.ID << " is connected to Node " << Node2.ID << " with a distance of " << Node1.GetDistance() << endl;
+
+	Node2.AddConnection(&Node1, 5);
+	cout << "Node " << Node2.ID << " is connected to Node " << Node1.ID << " with a distance of " << Node2.GetDistance() << endl;
+
 }
