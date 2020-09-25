@@ -85,8 +85,14 @@ class Node
 		Connection* Path = new Connection();
 };
 
+class DynArray
+{
+	public:
+};
+
 
 inline void Dijkstra(Node Nodes[], int size)
 {
-	int VisitedNodeIDs[Node::MAX*7]; // Static hard coded 
+	const int ArrSize = 7;
+	int VisitedNodeIDs[Node::MAX * ArrSize]; // Static hard coded, solution make a dynamic array class ^
 }
