@@ -15,7 +15,7 @@ int main()
 	Node Node6(6); // Node 6
 	Node Node7(7); // Node 7
 
-	// Add connections 
+	// Set connections 
 	// Node 1
 	Node1.AddConnection(&Node5, 9);
 	// Node 2
@@ -40,8 +40,10 @@ int main()
 	Node7.AddConnection(&Node4, 3);
 	Node7.AddConnection(&Node6, 5);
 
+	// Put in an array 
 	Node Nodes[7] = { Node1,Node2,Node3,Node4,Node5,Node6,Node7 };
 
+	// Print the network to user 
 	unsigned int size = sizeof(Nodes)/sizeof(Nodes[0]);
 	for (int k = 0; k < size; k++)
 	{
@@ -54,4 +56,22 @@ int main()
 			cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
 		}
 	}
+
+	// TODO: have the user input the source and destination and figure out the shortest path 
+	int Source, Destination;
+	cout << "\n\nNow let's figure out the shortest path to whatever you want" << endl;
+	cout << "Input source Node ID from the following: ";
+	for (int i = 0; i < size; i++)
+	{
+		cout << " " << Nodes[i].ID << " ";
+	}
+	cout << "\nSo: ";
+	cin >> Source;
+	cout << "Now Destination!" << endl;
+	cout << "So: ";
+	cin >> Destination;
+
+	cout << "We want to find the shortest path from node " << Source << " to " << Destination << endl;
+
+	// TODO implement algorithm 
 }
