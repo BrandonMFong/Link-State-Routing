@@ -2,6 +2,9 @@
 //
 #include "Node.cpp"
 
+// Recall that in Link state routing all switches send out a broadcast of all links
+// So we assume we know every node and its connection 
+
 int main()
 {
 	// Following figure 18.9 from text 
@@ -74,4 +77,6 @@ int main()
 	cout << "We want to find the shortest path from node " << Source << " to " << Destination << endl;
 
 	// TODO implement algorithm 
+	// For the algorithm let it assume that it has the list of nodes and their connection (which is already programmed in the node class)
+
 }
