@@ -69,6 +69,8 @@ int main()
 	//	}
 	//}
 	unsigned int size = Nlist.GetSize();
+
+	// TODO index and print info
 	for (int k = 0; k < size; k++)
 	{
 		Table NodeTable[Nodes[k].MAX];
