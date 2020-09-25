@@ -12,6 +12,8 @@ using ifstream = std::ifstream;
 
 //#define MAXCONNECTIONS 10;
 
+class Item;
+
 typedef struct Table
 {
 	int NodeID, Weight;
@@ -96,6 +98,14 @@ class NodeList
 				List->Add(item);
 			}
 		}
+
+		NodeList operator=(const NodeList&)
+		{
+			NodeList temp = NodeList();
+			temp.List = List;
+			return temp;
+		}
+
 	private:
 		class Item
 		{
@@ -147,6 +157,7 @@ class NodeList
 				}*/
 		};
 
+	//protected:
 		Item* List = nullptr; // this should be the first item in the list 
 };
 
