@@ -54,7 +54,7 @@ int main()
 		Nodes[k].GetTable(NodeTable);
 
 		cout << "Node " << Nodes[k].ID << " is connected to:" << endl;
-		for (int i = 0; i < Nodes[k].GetCapacity(); i++)
+		for (int i = 0; i < Nodes[k].GetNumberOfConnections(); i++)
 		{
 			cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
 		}
@@ -79,5 +79,8 @@ int main()
 	// TODO implement algorithm 
 	// For the algorithm let it assume that it has the list of nodes and their connection (which is already programmed in the node class)
 	// We are assuming the Source and destination follow the Nodes indexing, ie, Source = 1 is Nodes[0]
-	Dijkstra(Nodes,size,Source,Destination);
+
+	NodeList Nlist = NodeList();
+	Nlist.Add(&Node1);
+	Nlist.Add(&Node2);
 }

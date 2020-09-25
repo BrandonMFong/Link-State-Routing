@@ -47,7 +47,6 @@ class Node
 
 		void GetTable(Table* Table)
 		{
-
 			for (int i = 0; i < Capacity; i++)
 			{
 				Table[i].NodeID = Connections[i]->GetID();
@@ -77,25 +76,80 @@ class Node
 		// List of connections connected to the port
 		Connection* Connections[MAX];
 		void InitConnections() { for (int i = 0; i < MAX; i++) { Connections[i] = new Connection(); } }
-
-		// This object will contain the shortest distance from source and previous vertex 
-		Connection* Path = new Connection();
 };
 
-
-inline void Dijkstra(Node Nodes[], int size, int source, int destination)
+// I need a list of the nodes in a structure that is easy to add and remove
+class NodeList
 {
-	const int ArrSize = 7;
-	int VisitedNodeIDs[Node::MAX * ArrSize]; // Static hard coded, solution make a dynamic array class but let's not worry about that right now 
+	public:
+		NodeList() {};
 
-	int WorkingIndex = source;
-	for (int i = 0; i < size; i++)
-	{
-		Node WorkingNode = Nodes[WorkingIndex];
-		for (int k = 0; k < WorkingNode.GetNumberOfConnections(); k++)
+		void Add(Node* item)
 		{
-
+			// If the list is empty 
+			if (List == nullptr)
+			{
+				List = new Item(item);
+			}
+			else
+			{
+				List->Add(item);
+			}
 		}
-	}
-	
+	private:
+		class Item
+		{
+			public:
+
+				// Constructors 
+				Item() {}
+
+				// init list
+				Item(Node* C)
+				{
+					Left = nullptr; Right = nullptr; Current = C;
+					//DeterminePosition();
+				}
+
+				// adding to an already existing list
+				// Do I need this? 
+				Item(Node* C, Item* L, Item* R)
+				{
+					Left = L; Right = R; Current = C;
+					//DeterminePosition();
+				}
+
+				bool isFirst(){ return (Left == nullptr) ? true : false; }
+				bool isLast(){ return (Right == nullptr) ? true : false; }
+
+				// Adds at the end of the list
+				void Add(Node* item)
+				{
+					Item* temp = this;
+
+					// Get the last in the list 
+					while (temp->Right != nullptr) temp = temp->Right;
+
+					temp->Right = new Item(item); // Create the new object and put its address in the list 
+					temp->Right->Left = temp;
+				}
+				
+			private:
+				/*bool isFirst = false;
+				bool isLast = false;*/
+				Item* Left = nullptr;
+				Item* Right = nullptr;
+				Node* Current = nullptr;
+				/*void DeterminePosition()
+				{
+					isFirst = (Left == nullptr) ? true : false;
+					isLast = (Right == nullptr) ? true : false;
+				}*/
+		};
+
+		Item* List = nullptr; // this should be the first item in the list 
+};
+
+inline void Dijkstra(Node Nodes[])
+{
 }
