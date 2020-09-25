@@ -36,8 +36,6 @@ class Node
 			InitConnections();
 		};
 
-		int GetCapacity() { return Capacity; }
-
 		void AddConnection(Node* n, int weight)
 		{
 			if (Capacity != MAX)
@@ -61,8 +59,7 @@ class Node
 		int GetNumberOfConnections() { return Capacity; }
 
 	private:
-		// Known connections from each node 
-		int Capacity = 0;
+		int Capacity = 0; // Number of connections to this node
 		class Connection
 		{
 			public:
@@ -86,10 +83,19 @@ class Node
 };
 
 
-inline void Dijkstra(Node Nodes[], int size)
+inline void Dijkstra(Node Nodes[], int size, int source, int destination)
 {
 	const int ArrSize = 7;
 	int VisitedNodeIDs[Node::MAX * ArrSize]; // Static hard coded, solution make a dynamic array class but let's not worry about that right now 
 
+	int WorkingIndex = source;
+	for (int i = 0; i < size; i++)
+	{
+		Node WorkingNode = Nodes[WorkingIndex];
+		for (int k = 0; k < WorkingNode.GetNumberOfConnections(); k++)
+		{
 
+		}
+	}
+	
 }
