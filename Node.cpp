@@ -87,7 +87,7 @@ class Node
 class NodeList
 {
 	public:
-		NodeList() {};
+		NodeList() { size = 0; };
 
 		void Add(Node* item)
 		{
@@ -95,10 +95,12 @@ class NodeList
 			if (List == nullptr)
 			{
 				List = new Item(item);
+				size++;
 			}
 			else
 			{
 				List->Add(item);
+				size++;
 			}
 		}
 
@@ -122,7 +124,10 @@ class NodeList
 			return temp;
 		}
 
+		int GetSize() { return size; }
+
 	private:
+		int size;
 		class Item
 		{
 			public:

@@ -50,9 +50,25 @@ int main()
 	Nlist.Add(&Node1);
 	Nlist.Add(&Node2);
 	Nlist.Add(&Node3);
+	Nlist.Add(&Node4);
+	Nlist.Add(&Node5);
+	Nlist.Add(&Node6);
+	Nlist.Add(&Node7);
 
-	// Print the network to user 
-	unsigned int size = sizeof(Nodes)/sizeof(Nodes[0]);
+	//// Print the network to user 
+	//unsigned int size = sizeof(Nodes)/sizeof(Nodes[0]);
+	//for (int k = 0; k < size; k++)
+	//{
+	//	Table NodeTable[Nodes[k].MAX];
+	//	Nodes[k].GetTable(NodeTable);
+
+	//	cout << "Node " << Nodes[k].ID << " is connected to:" << endl;
+	//	for (int i = 0; i < Nodes[k].GetNumberOfConnections(); i++)
+	//	{
+	//		cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
+	//	}
+	//}
+	unsigned int size = Nlist.GetSize();
 	for (int k = 0; k < size; k++)
 	{
 		Table NodeTable[Nodes[k].MAX];
