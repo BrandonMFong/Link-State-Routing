@@ -81,6 +81,9 @@ class Node
 };
 
 // I need a list of the nodes in a structure that is easy to add and remove
+// Outer layer should be able to read the list 
+// Inner layer should only know how to organize
+// the outer layer does not care how nodes are organized
 class NodeList
 {
 	public:
@@ -99,6 +102,19 @@ class NodeList
 			}
 		}
 
+		//Get the node by index
+		// 0 index is true 
+		Node Get(int index)
+		{
+			Item* temp = List;
+			for (int i = 0; i < index + 1; i++)
+			{
+				temp = temp->GetRight();
+			}
+			return *temp->GetNode();
+		}
+
+		// deal with this later 
 		NodeList operator=(const NodeList&)
 		{
 			NodeList temp = NodeList();
@@ -118,7 +134,6 @@ class NodeList
 				Item(Node* C)
 				{
 					Left = nullptr; Right = nullptr; Current = C;
-					//DeterminePosition();
 				}
 
 				// adding to an already existing list
@@ -126,11 +141,14 @@ class NodeList
 				Item(Node* C, Item* L, Item* R)
 				{
 					Left = L; Right = R; Current = C;
-					//DeterminePosition();
 				}
 
 				bool isFirst(){ return (Left == nullptr) ? true : false; }
 				bool isLast(){ return (Right == nullptr) ? true : false; }
+
+				Item* GetRight() { return Right; }
+				Item* GetLeft() { return Left; }
+				Node* GetNode() { return Current; }
 
 				// Adds at the end of the list
 				void Add(Node* item)
@@ -145,16 +163,9 @@ class NodeList
 				}
 				
 			private:
-				/*bool isFirst = false;
-				bool isLast = false;*/
 				Item* Left = nullptr;
 				Item* Right = nullptr;
 				Node* Current = nullptr;
-				/*void DeterminePosition()
-				{
-					isFirst = (Left == nullptr) ? true : false;
-					isLast = (Right == nullptr) ? true : false;
-				}*/
 		};
 
 	//protected:

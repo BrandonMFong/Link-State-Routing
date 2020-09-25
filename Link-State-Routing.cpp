@@ -46,6 +46,11 @@ int main()
 	// Put in an array 
 	Node Nodes[7] = { Node1,Node2,Node3,Node4,Node5,Node6,Node7 };
 
+	NodeList Nlist = NodeList();
+	Nlist.Add(&Node1);
+	Nlist.Add(&Node2);
+	Nlist.Add(&Node3);
+
 	// Print the network to user 
 	unsigned int size = sizeof(Nodes)/sizeof(Nodes[0]);
 	for (int k = 0; k < size; k++)
@@ -79,8 +84,4 @@ int main()
 	// TODO implement algorithm 
 	// For the algorithm let it assume that it has the list of nodes and their connection (which is already programmed in the node class)
 	// We are assuming the Source and destination follow the Nodes indexing, ie, Source = 1 is Nodes[0]
-
-	NodeList Nlist = NodeList();
-	Nlist.Add(&Node1);
-	Nlist.Add(&Node2);
 }
