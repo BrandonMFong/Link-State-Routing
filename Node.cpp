@@ -84,3 +84,9 @@ class Node
 		// This object will contain the shortest distance from source and previous vertex 
 		Connection* Path = new Connection();
 };
+
+
+inline void Dijkstra(Node Nodes[], int size)
+{
+	int VisitedNodeIDs[Node::MAX*7]; // Static hard coded 
+}

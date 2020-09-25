@@ -78,5 +78,5 @@ int main()
 
 	// TODO implement algorithm 
 	// For the algorithm let it assume that it has the list of nodes and their connection (which is already programmed in the node class)
-
+	Dijkstra(Nodes,size);
 }
