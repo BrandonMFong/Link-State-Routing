@@ -68,12 +68,12 @@ int main()
 	}
 
 	// Prompt user
-	int Source, Destination;
+	int Source, Destination; // These values will hold Node IDs
 	cout << "\n\nNow let's figure out the shortest path to whatever you want" << endl;
-	cout << "Input source Node ID from the following" << endl;
+	cout << "Input source Node ID from the following: " << endl;
 	for (int i = 0; i < size; i++)
 	{
-		cout << "Node " << Nodes.Get(i).ID << ": index " << i << endl;
+		cout << "Node " << Nodes.Get(i).ID << endl;
 	}
 	cout << "\nSo: ";
 	cin >> Source;
