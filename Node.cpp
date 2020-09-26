@@ -126,11 +126,33 @@ class NodeList
 
 			for (int i = 0; i < size; i++)
 			{
-				if (temp->GetNode()->ID == ID) { results = temp->GetNode(); }
+				if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }
 				else { temp = temp->GetRight(); }
 			}
 
 			return *results;
+		}
+
+		void RemoveNodeByID(int ID)
+		{
+			Node* results = new Node(); // return value 
+			Item* temp = List; // temp 
+
+			for (int i = 0; i < size; i++)
+			{
+				// If I found the item with the correct node id, then take that out of the list and close it
+				// I need to remove the item from memory
+				if (temp->GetNode()->ID == ID) 
+				{ 
+					// Reorganize
+					temp->SetLeft(temp->GetRight());
+					temp->SetRight(temp->GetLeft());
+					
+					// Remove current node 
+					delete temp;
+				}
+				else { temp = temp->GetRight(); }
+			}
 		}
 
 		// deal with this later 
@@ -163,6 +185,14 @@ class NodeList
 				// Constructors 
 				Item() {}
 
+				// Destructor 
+				/*~Item()
+				{
+					delete[]Left;
+					delete[]Right;
+					delete[]Current;
+				}*/
+
 				// init list
 				Item(Node* C)
 				{
@@ -179,9 +209,14 @@ class NodeList
 				bool isFirst(){ return (Left == nullptr) ? true : false; }
 				bool isLast(){ return (Right == nullptr) ? true : false; }
 
+				// Get
 				Item* GetRight() { return Right; }
 				Item* GetLeft() { return Left; }
 				Node* GetNode() { return Current; }
+
+				// Set
+				void SetRight(Item* value) { Right = value; }
+				void SetLeft(Item* value) { Left = value; }
 
 				// Adds at the end of the list
 				void Add(Node* item)
@@ -225,6 +260,6 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 	UnvisitedNodes->Copy(Nodes); // Copy over nodes
 
 	Node WorkingNode = UnvisitedNodes->GetNodeByID(Source); // Init working node to source 
-
+	UnvisitedNodes->RemoveNodeByID(Source); // TODO finish delete 
 
 }
