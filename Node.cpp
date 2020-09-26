@@ -108,12 +108,15 @@ class NodeList
 		// 0 index is true 
 		Node Get(int index)
 		{
-			Item* temp = List;
-			for (int i = 0; i < index + 1; i++)
+			if (GetSize() >= index)
 			{
-				temp = temp->GetRight();
+				Item* temp = List;
+				for (int i = 0; i < index; i++)
+				{
+					temp = temp->GetRight();
+				}
+				return *temp->GetNode();
 			}
-			return *temp->GetNode();
 		}
 
 		// deal with this later 

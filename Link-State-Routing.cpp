@@ -73,11 +73,11 @@ int main()
 	// TODO index and print info
 	for (int k = 0; k < size; k++)
 	{
-		Table NodeTable[Nodes[k].MAX];
-		Nodes[k].GetTable(NodeTable);
+		Table* NodeTable = new Table[Nlist.Get(k).MAX];
+		Nlist.Get(k).GetTable(NodeTable);
 
-		cout << "Node " << Nodes[k].ID << " is connected to:" << endl;
-		for (int i = 0; i < Nodes[k].GetNumberOfConnections(); i++)
+		cout << "Node " << Nlist.Get(k).ID << " is connected to:" << endl;
+		for (int i = 0; i < Nlist.Get(k).GetNumberOfConnections(); i++)
 		{
 			cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
 		}
@@ -89,7 +89,7 @@ int main()
 	cout << "Input source Node ID from the following: ";
 	for (int i = 0; i < size; i++)
 	{
-		cout << " " << Nodes[i].ID << " ";
+		cout << " " << Nlist.Get(i).ID << " ";
 	}
 	cout << "\nSo: ";
 	cin >> Source;
