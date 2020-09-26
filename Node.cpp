@@ -129,6 +129,17 @@ class NodeList
 
 		int GetSize() { return size; }
 
+		NodeList Copy(NodeList original)
+		{
+			Item* temp =  original.List;
+			while (1)
+			{
+				Add(temp->GetNode());
+				if (temp->GetRight() != nullptr) break;
+				else { temp = temp->GetRight(); }
+			}
+		}
+
 	private:
 		int size;
 		class Item
@@ -180,6 +191,18 @@ class NodeList
 		Item* List = nullptr; // this should be the first item in the list 
 };
 
-inline void Dijkstra(Node Nodes[])
+struct Path
 {
+	Node CurrentNode;
+	int ShortestDistance;
+	Node PreviousNode;
+};
+
+inline void Dijkstra(NodeList Nodes, int Source, int Destination)
+{
+	NodeList* VisitedNodes = new NodeList();
+	NodeList* UnvisitedNodes = new NodeList();
+	Path PathTable[10]; // using ten to be safe 
+
+	UnvisitedNodes->Copy(Nodes); // Copy over nodes
 }

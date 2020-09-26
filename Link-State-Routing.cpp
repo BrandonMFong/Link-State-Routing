@@ -43,53 +43,37 @@ int main()
 	Node7.AddConnection(&Node4, 3);
 	Node7.AddConnection(&Node6, 5);
 
-	// Put in an array 
-	Node Nodes[7] = { Node1,Node2,Node3,Node4,Node5,Node6,Node7 };
+	// Organize in array 
+	NodeList Nodes = NodeList();
+	Nodes.Add(&Node1);
+	Nodes.Add(&Node2);
+	Nodes.Add(&Node3);
+	Nodes.Add(&Node4);
+	Nodes.Add(&Node5);
+	Nodes.Add(&Node6);
+	Nodes.Add(&Node7);
 
-	NodeList Nlist = NodeList();
-	Nlist.Add(&Node1);
-	Nlist.Add(&Node2);
-	Nlist.Add(&Node3);
-	Nlist.Add(&Node4);
-	Nlist.Add(&Node5);
-	Nlist.Add(&Node6);
-	Nlist.Add(&Node7);
+	unsigned int size = Nodes.GetSize();
 
-	//// Print the network to user 
-	//unsigned int size = sizeof(Nodes)/sizeof(Nodes[0]);
-	//for (int k = 0; k < size; k++)
-	//{
-	//	Table NodeTable[Nodes[k].MAX];
-	//	Nodes[k].GetTable(NodeTable);
-
-	//	cout << "Node " << Nodes[k].ID << " is connected to:" << endl;
-	//	for (int i = 0; i < Nodes[k].GetNumberOfConnections(); i++)
-	//	{
-	//		cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
-	//	}
-	//}
-	unsigned int size = Nlist.GetSize();
-
-	// TODO index and print info
 	for (int k = 0; k < size; k++)
 	{
-		Table* NodeTable = new Table[Nlist.Get(k).MAX];
-		Nlist.Get(k).GetTable(NodeTable);
+		Table* NodeTable = new Table[Nodes.Get(k).MAX];
+		Nodes.Get(k).GetTable(NodeTable);
 
-		cout << "Node " << Nlist.Get(k).ID << " is connected to:" << endl;
-		for (int i = 0; i < Nlist.Get(k).GetNumberOfConnections(); i++)
+		cout << "Node " << Nodes.Get(k).ID << " is connected to:" << endl;
+		for (int i = 0; i < Nodes.Get(k).GetNumberOfConnections(); i++)
 		{
 			cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
 		}
 	}
 
-	// TODO: have the user input the source and destination and figure out the shortest path 
+	// Prompt user
 	int Source, Destination;
 	cout << "\n\nNow let's figure out the shortest path to whatever you want" << endl;
-	cout << "Input source Node ID from the following: ";
+	cout << "Input source Node ID from the following" << endl;
 	for (int i = 0; i < size; i++)
 	{
-		cout << " " << Nlist.Get(i).ID << " ";
+		cout << "Node " << Nodes.Get(i).ID << ": index " << i << endl;
 	}
 	cout << "\nSo: ";
 	cin >> Source;
@@ -100,6 +84,7 @@ int main()
 	cout << "We want to find the shortest path from node " << Source << " to " << Destination << endl;
 
 	// TODO implement algorithm 
-	// For the algorithm let it assume that it has the list of nodes and their connection (which is already programmed in the node class)
-	// We are assuming the Source and destination follow the Nodes indexing, ie, Source = 1 is Nodes[0]
+
+	Dijkstra(Nodes, Source, Destination);
+
 }
