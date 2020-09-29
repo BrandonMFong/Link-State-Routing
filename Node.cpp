@@ -150,6 +150,7 @@ class NodeList
 					
 					// Remove current node 
 					delete temp;
+					break; // Then I would need to exit the loop because I am only deleting one item 
 				}
 				else { temp = temp->GetRight(); }
 			}
