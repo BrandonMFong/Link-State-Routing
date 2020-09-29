@@ -144,12 +144,14 @@ class NodeList
 				// I need to remove the item from memory
 				if (temp->GetNode()->ID == ID) 
 				{ 
-					// Reorganize
-					temp->SetLeft(temp->GetRight());
-					temp->SetRight(temp->GetLeft());
+					// Removing item pointed by temp 
+					// If the neighbors of temp are not null, then get that var and rewrite their node pointers
+					if(temp->GetLeft() != nullptr) temp->GetLeft()->SetRight(temp->GetRight());
+					if (temp->GetRight() != nullptr) temp->GetRight()->SetLeft(temp->GetLeft());
 					
 					// Remove current node 
-					delete temp;
+					//delete temp; // do I need to delete temp?
+
 					break; // Then I would need to exit the loop because I am only deleting one item 
 				}
 				else { temp = temp->GetRight(); }
