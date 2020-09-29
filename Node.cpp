@@ -144,30 +144,40 @@ class NodeList
 				// I need to remove the item from memory
 				if (temp->GetNode()->ID == ID) 
 				{ 
+					// I am wondering if there is a more efficient way to determine if the temp var is the first or last
+
 					// Removing item pointed by temp 
 					// If the neighbors of temp are not null, then get that var and rewrite their node pointers
-					if ((temp->GetLeft() != nullptr) && (temp->GetRight() != nullptr))
+					// if there is only one
+					if ((temp->GetLeft() == nullptr) && (temp->GetRight() == nullptr))
 					{
-						temp->GetLeft()->SetRight(temp->GetRight());
-						temp->GetRight()->SetLeft(temp->GetLeft());
+						delete temp;
+						break; 
 					}
 					// The case where the deleted node is the first item and I need to reset the item 
 					else if (temp->GetLeft() == nullptr)
 					{
 						List = temp->GetRight();
+						// Remove current node 
+						delete temp;
+						break;
 					}
 					// If the node to delete is the last one, then I need to set the right point of the n-1 node to null, where n is the size of this array 
 					else if (temp->GetRight() == nullptr)
 					{
 						temp->GetLeft()->SetRight(nullptr);
+						// Remove current node 
+						delete temp;
+						break;
 					}
-
-					// What if the object is size 1? 
-					
-					// Remove current node 
-					delete temp; // do I need to delete temp?
-
-					break; // Then I would need to exit the loop because I am only deleting one item 
+					else
+					{
+						temp->GetLeft()->SetRight(temp->GetRight());
+						temp->GetRight()->SetLeft(temp->GetLeft());
+						// Remove current node 
+						delete temp;
+						break;
+					}
 				}
 				else { temp = temp->GetRight(); }
 			}
