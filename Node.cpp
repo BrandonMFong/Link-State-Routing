@@ -146,11 +146,26 @@ class NodeList
 				{ 
 					// Removing item pointed by temp 
 					// If the neighbors of temp are not null, then get that var and rewrite their node pointers
-					if(temp->GetLeft() != nullptr) temp->GetLeft()->SetRight(temp->GetRight());
-					if (temp->GetRight() != nullptr) temp->GetRight()->SetLeft(temp->GetLeft());
+					if ((temp->GetLeft() != nullptr) && (temp->GetRight() != nullptr))
+					{
+						temp->GetLeft()->SetRight(temp->GetRight());
+						temp->GetRight()->SetLeft(temp->GetLeft());
+					}
+					// The case where the deleted node is the first item and I need to reset the item 
+					else if (temp->GetLeft() == nullptr)
+					{
+						List = temp->GetRight();
+					}
+					// If the node to delete is the last one, then I need to set the right point of the n-1 node to null, where n is the size of this array 
+					else if (temp->GetRight() == nullptr)
+					{
+						temp->GetLeft()->SetRight(nullptr);
+					}
+
+					// What if the object is size 1? 
 					
 					// Remove current node 
-					//delete temp; // do I need to delete temp?
+					delete temp; // do I need to delete temp?
 
 					break; // Then I would need to exit the loop because I am only deleting one item 
 				}
@@ -166,6 +181,8 @@ class NodeList
 			return temp;
 		}
 
+		// I think I need to actually calculate the size 
+		// TODO run through the pointers and count the actual size of this object
 		int GetSize() { return size; }
 
 		void Copy(NodeList original)
