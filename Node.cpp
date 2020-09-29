@@ -87,7 +87,7 @@ class Node
 class NodeList
 {
 	public:
-		NodeList() { size = 0; };
+		NodeList() {};
 
 		void Add(Node* item)
 		{
@@ -95,12 +95,12 @@ class NodeList
 			if (List == nullptr)
 			{
 				List = new Item(item);
-				size++;
+				//size++;
 			}
 			else
 			{
 				List->Add(item);
-				size++;
+				//size++;
 			}
 		}
 
@@ -124,7 +124,7 @@ class NodeList
 			Node* results = new Node(); // return value 
 			Item* temp = List; // temp 
 
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < GetSize(); i++)
 			{
 				if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }
 				else { temp = temp->GetRight(); }
@@ -138,7 +138,7 @@ class NodeList
 			Node* results = new Node(); // return value 
 			Item* temp = List; // temp 
 
-			for (int i = 0; i < size; i++)
+			for (int i = 0; i < GetSize(); i++)
 			{
 				// If I found the item with the correct node id, then take that out of the list and close it
 				// I need to remove the item from memory
@@ -192,8 +192,14 @@ class NodeList
 		}
 
 		// I think I need to actually calculate the size 
-		// TODO run through the pointers and count the actual size of this object
-		int GetSize() { return size; }
+		int GetSize() 
+		{ 
+			int i = 0;
+			Item* temp = List;
+			while (temp->GetRight() != nullptr) { i++; temp = temp->GetRight(); }
+			//size = i; // Reassigning 
+			return i; 
+		}
 
 		void Copy(NodeList original)
 		{
@@ -207,7 +213,7 @@ class NodeList
 		}
 
 	private:
-		int size;
+		//int size;
 		class Item
 		{
 			public:
