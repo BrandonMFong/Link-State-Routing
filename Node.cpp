@@ -10,14 +10,16 @@ using namespace std;
 using json = nlohmann::json;
 using ifstream = std::ifstream;
 
-//#define MAXCONNECTIONS 10;
-
-//class Item;
-//class Node;
-
 typedef struct Table
 {
 	int NodeID, Weight;
+};
+
+struct Path
+{
+	Node CurrentNode;
+	int ShortestDistance;
+	Node* PreviousNode;
 };
 
 
@@ -276,13 +278,6 @@ class NodeList
 
 	//protected:
 		Item* List = nullptr; // this should be the first item in the list 
-};
-
-struct Path
-{
-	Node CurrentNode;
-	int ShortestDistance;
-	Node* PreviousNode;
 };
 
 // Should Source/Destination be the index values for the array or node IDs? 
