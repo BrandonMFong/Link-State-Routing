@@ -282,7 +282,7 @@ struct Path
 {
 	Node CurrentNode;
 	int ShortestDistance;
-	Node PreviousNode;
+	Node* PreviousNode;
 };
 
 // Should Source/Destination be the index values for the array or node IDs? 
@@ -291,17 +291,36 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 {
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
 	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
-	Path PathTable[10]; // using ten to be safe 
+	Path PathTable[MAX]; // using ten to be safe 
+
+	// Init table values 
+	for (int i = 0; i < Nodes.GetSize(); i++)
+	{
+		PathTable[i].CurrentNode = Nodes.GetByIndex(i).ID;
+		PathTable[i].ShortestDistance = MAX + 1;// infinity is usually represented by the number of nodes+1
+		PathTable[i].PreviousNode = nullptr;
+	}
 
 	UnvisitedNodes->Copy(Nodes); // Copy over nodes
 
 	int CurrentNode = Source;
 	while (1)
 	{
-		cout << "Size of Visited array: " << VisitedNodes->GetSize() << endl;
+		cout << "\nSize of Visited array: " << VisitedNodes->GetSize() << endl;
 		cout << "Size of Unvisited array: " << UnvisitedNodes->GetSize() << endl;
 
 		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNode); // Init working node to source 
+		cout << "Current working node: " << WorkingNode.ID << endl;
+
+		// Calculate shortest path 
+		Table* WorkingNodeTable = new Table[MAX];
+		WorkingNode.GetTable(WorkingNodeTable);
+
+		// Recall number of table values should be the same size as the # of connection a node has 
+		for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+		{
+			// evaluate node connection and update table 
+		}
 
 		// Remove from unvisted and add to visited 
 		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNode));
