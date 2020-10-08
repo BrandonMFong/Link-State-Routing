@@ -57,11 +57,11 @@ int main()
 
 	for (int k = 0; k < size; k++)
 	{
-		Table* NodeTable = new Table[Nodes.Get(k).MAX];
-		Nodes.Get(k).GetTable(NodeTable);
+		Table* NodeTable = new Table[MAX];
+		Nodes.GetByIndex(k).GetTable(NodeTable);
 
-		cout << "Node " << Nodes.Get(k).ID << " is connected to:" << endl;
-		for (int i = 0; i < Nodes.Get(k).GetNumberOfConnections(); i++)
+		cout << "Node " << Nodes.GetByIndex(k).ID << " is connected to:" << endl;
+		for (int i = 0; i < Nodes.GetByIndex(k).GetNumberOfConnections(); i++)
 		{
 			cout << "	- Node " << NodeTable[i].NodeID << ", distance: " << NodeTable[i].Weight << endl;
 		}
@@ -73,7 +73,7 @@ int main()
 	cout << "Input source Node ID from the following: " << endl;
 	for (int i = 0; i < size; i++)
 	{
-		cout << "Node " << Nodes.Get(i).ID << endl;
+		cout << "Node " << Nodes.GetByIndex(i).ID << endl;
 	}
 	cout << "\nSo: ";
 	cin >> Source;

@@ -12,18 +12,23 @@ using ifstream = std::ifstream;
 
 //#define MAXCONNECTIONS 10;
 
-class Item;
+//class Item;
+//class Node;
 
 typedef struct Table
 {
 	int NodeID, Weight;
 };
 
+
+static const int MaxNodesInNetwork = 7;
+static const int MAX = 10; // Max connectin a node can have on a network 
+
 class Node
 {
 	public:
 		int ID;
-		static const int MAX = 10;
+
 
 		// Constructors
 		Node()
@@ -78,6 +83,7 @@ class Node
 		// List of connections connected to the port
 		Connection* Connections[MAX];
 		void InitConnections() { for (int i = 0; i < MAX; i++) { Connections[i] = new Connection(); } }
+
 };
 
 // I need a list of the nodes in a structure that is easy to add and remove
@@ -92,21 +98,13 @@ class NodeList
 		void Add(Node* item)
 		{
 			// If the list is empty 
-			if (List == nullptr)
-			{
-				List = new Item(item);
-				//size++;
-			}
-			else
-			{
-				List->Add(item);
-				//size++;
-			}
+			if (List == nullptr)List = new Item(item);
+			else List->Add(item);
 		}
 
 		//Get the node by index
 		// 0 index is true 
-		Node Get(int index)
+		Node GetByIndex(int index)
 		{
 			if (GetSize() >= index)
 			{
@@ -195,8 +193,12 @@ class NodeList
 		int GetSize() 
 		{ 
 			int i = 0;
-			Item* temp = List;
-			while (temp->GetRight() != nullptr) { i++; temp = temp->GetRight(); }
+			if(List != nullptr) // if the list isn't empty, otherwise just return 0 without going through list
+			{
+				i = 1; // if List isn't empty, there is atleast one
+				Item* temp = List;
+				while (temp->GetRight() != nullptr) { i++; temp = temp->GetRight(); }
+			}
 			//size = i; // Reassigning 
 			return i; 
 		}
@@ -283,19 +285,27 @@ struct Path
 	Node PreviousNode;
 };
 
-
-
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
 inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 {
-	NodeList* VisitedNodes = new NodeList();
-	NodeList* UnvisitedNodes = new NodeList();
+	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
+	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
 	Path PathTable[10]; // using ten to be safe 
 
 	UnvisitedNodes->Copy(Nodes); // Copy over nodes
 
-	Node WorkingNode = UnvisitedNodes->GetNodeByID(Source); // Init working node to source 
-	UnvisitedNodes->RemoveNodeByID(Source); // TODO finish delete 
+	int CurrentNode = Source;
+	while (1)
+	{
+		cout << "Size of Visited array: " << VisitedNodes->GetSize() << endl;
+		cout << "Size of Unvisited array: " << UnvisitedNodes->GetSize() << endl;
+
+		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNode); // Init working node to source 
+
+		// Remove from unvisted and add to visited 
+		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNode));
+		UnvisitedNodes->RemoveNodeByID(CurrentNode);
+	}
 
 }
