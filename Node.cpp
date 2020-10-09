@@ -279,6 +279,20 @@ struct Path
 	Node* PreviousNode;
 };
 
+// Recursively working through the table to get the distance vector 
+inline void GetDistance(Path Table[MAX], int& distance, int CurrentNodeID)
+{
+	for (int k = 0; k < MAX; k++)
+	{
+		if (Table[k].CurrentNode.ID == CurrentNodeID) // go to the right entry
+		{
+			distance += Table[k].ShortestDistance; // Add the distance
+			if (Table[k].PreviousNode != nullptr) { GetDistance(Table, distance, Table[k].PreviousNode->ID); } // pass the previous node id only if it is not null
+			break;
+		}
+	}
+}
+
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
 inline void Dijkstra(NodeList Nodes, int Source, int Destination)
@@ -313,18 +327,40 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		// Go through each entry of the table
 		for (int k = 0; k < (sizeof(PathTable) / sizeof(PathTable[0])); k++)
 		{
-			// for each entry in the table, go through each of the current node's connection and see if the lowest distance is recorded 
-			// Recall number of table values should be the same size as the # of connection a node has 
-			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+			// EXAMINE CURRENT NODE
+			if (PathTable[k].CurrentNode.ID == WorkingNode.ID)
 			{
-				// evaluate node connection and update table 
-				// is the previous node of the table the node that was recently removed from the unvisited nodes? 
-				// make sure we are working on the right nodes of both tables
-				// catch if the weight is less than the working node
-				// I also need to note the previous connection
-				if ((PathTable[k].CurrentNode.ID == WorkingNodeTable[i].NodeID) && (PathTable[k].ShortestDistance > WorkingNodeTable[i].Weight))
+				int distance = 0;
+				GetDistance(PathTable, distance, WorkingNode.ID);
+				if(distance < PathTable[k].ShortestDistance) // if there is a shorter distance
 				{
+					PathTable[k].ShortestDistance = distance;
+				}
+			}
+			else
+			{
+				// EXAMINE CONNECTIONS
+				// for each entry in the table, go through each of the current node's connection and see if the lowest distance is recorded 
+				// Recall number of table values should be the same size as the # of connection a node has 
+				for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+				{
+					// evaluate node connection and update table 
+					// is the previous node of the table the node that was recently removed from the unvisited nodes? 
+					// make sure we are working on the right nodes of both tables
+					// catch if the weight is less than the working node
+					// I also need to note the previous connection
+					if (PathTable[k].CurrentNode.ID == WorkingNodeTable[i].NodeID)
+					{
+						int distance = 0;
+						GetDistance(PathTable, distance, WorkingNodeTable[i].NodeID);
+						if (distance < PathTable[k].ShortestDistance)
+						{
+							PathTable[k].ShortestDistance = distance;
 
+							// Should this be a copy over? 
+							PathTable[k].PreviousNode = &WorkingNode; // the previous node should be the current working node
+						}
+					}
 				}
 			}
 		}
