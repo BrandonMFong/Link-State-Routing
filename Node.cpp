@@ -15,14 +15,6 @@ typedef struct Table
 	int NodeID, Weight;
 };
 
-struct Path
-{
-	Node CurrentNode;
-	int ShortestDistance;
-	Node* PreviousNode;
-};
-
-
 static const int MaxNodesInNetwork = 7;
 static const int MAX = 10; // Max connectin a node can have on a network 
 
@@ -280,6 +272,13 @@ class NodeList
 		Item* List = nullptr; // this should be the first item in the list 
 };
 
+struct Path
+{
+	Node CurrentNode;
+	int ShortestDistance;
+	Node* PreviousNode;
+};
+
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
 inline void Dijkstra(NodeList Nodes, int Source, int Destination)
@@ -311,11 +310,25 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		Table* WorkingNodeTable = new Table[MAX];
 		WorkingNode.GetTable(WorkingNodeTable);
 
-		// Recall number of table values should be the same size as the # of connection a node has 
-		for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+		// Go through each entry of the table
+		for (int k = 0; k < (sizeof(PathTable) / sizeof(PathTable[0])); k++)
 		{
-			// evaluate node connection and update table 
+			// for each entry in the table, go through each of the current node's connection and see if the lowest distance is recorded 
+			// Recall number of table values should be the same size as the # of connection a node has 
+			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+			{
+				// evaluate node connection and update table 
+				// is the previous node of the table the node that was recently removed from the unvisited nodes? 
+				// make sure we are working on the right nodes of both tables
+				// catch if the weight is less than the working node
+				// I also need to note the previous connection
+				if ((PathTable[k].CurrentNode.ID == WorkingNodeTable[i].NodeID) && (PathTable[k].ShortestDistance > WorkingNodeTable[i].Weight))
+				{
+
+				}
+			}
 		}
+
 
 		// Remove from unvisted and add to visited 
 		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNode));
