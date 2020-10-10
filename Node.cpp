@@ -280,14 +280,14 @@ struct Path
 };
 
 // Recursively working through the table to get the distance vector 
-inline void GetDistance(Path Table[MAX], int& distance, int CurrentNodeID)
+inline void GetDistance(struct Path Table[MAX], int& distance, int CurrentNodeID)
 {
 	for (int k = 0; k < MAX; k++)
 	{
 		if (Table[k].CurrentNode.ID == CurrentNodeID) // go to the right entry
 		{
-			distance += Table[k].ShortestDistance; // Add the distance
 			if (Table[k].PreviousNode != nullptr) { GetDistance(Table, distance, Table[k].PreviousNode->ID); } // pass the previous node id only if it is not null
+			distance += Table[k].ShortestDistance; // Add the distance
 			break;
 		}
 	}
@@ -300,12 +300,14 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
 	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
 	Path PathTable[MAX]; // using ten to be safe 
+	//Path* PathTablex = (struct Path*)malloc(Nodes.GetSize());
 
 	// Init table values 
 	for (int i = 0; i < Nodes.GetSize(); i++)
 	{
-		PathTable[i].CurrentNode = Nodes.GetByIndex(i).ID;
-		PathTable[i].ShortestDistance = MAX + 1;// infinity is usually represented by the number of nodes+1
+		PathTable[i].CurrentNode = Nodes.GetByIndex(i);
+		if(PathTable[i].CurrentNode.ID == Source){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
+		else { PathTable[i].ShortestDistance = MAX + 1; }// infinity is usually represented by the number of nodes+1
 		PathTable[i].PreviousNode = nullptr;
 	}
 
@@ -320,7 +322,9 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNode); // Init working node to source 
 		cout << "Current working node: " << WorkingNode.ID << endl;
 
-		// Calculate shortest path 
+		/* Calculate shortest path */
+
+		// Get current node's connection table
 		Table* WorkingNodeTable = new Table[MAX];
 		WorkingNode.GetTable(WorkingNodeTable);
 
