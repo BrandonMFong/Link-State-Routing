@@ -286,7 +286,11 @@ inline void GetDistance(struct Path Table[MAX], int& distance, int CurrentNodeID
 	{
 		if (Table[k].CurrentNode.ID == CurrentNodeID) // go to the right entry
 		{
-			if (Table[k].PreviousNode != nullptr) { GetDistance(Table, distance, Table[k].PreviousNode->ID); } // pass the previous node id only if it is not null
+			Path row = Table[k];
+			if (row.CurrentNode.ID != 0)
+			{
+				if (row.PreviousNode != nullptr) GetDistance(Table, distance, row.PreviousNode->ID);  // pass the previous node id only if it is not null
+			}
 			distance += Table[k].ShortestDistance; // Add the distance
 			break;
 		}
@@ -308,7 +312,7 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		PathTable[i].CurrentNode = Nodes.GetByIndex(i);
 		if(PathTable[i].CurrentNode.ID == Source){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
 		else { PathTable[i].ShortestDistance = MAX + 1; }// infinity is usually represented by the number of nodes+1
-		PathTable[i].PreviousNode = nullptr;
+		PathTable[i].PreviousNode = new Node();
 	}
 
 	UnvisitedNodes->Copy(Nodes); // Copy over nodes
@@ -328,6 +332,8 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		Table* WorkingNodeTable = new Table[MAX];
 		WorkingNode.GetTable(WorkingNodeTable);
 
+		Path Next = { *(new Node()), MAX + 1, nullptr };
+
 		// Go through each entry of the table
 		for (int k = 0; k < (sizeof(PathTable) / sizeof(PathTable[0])); k++)
 		{
@@ -341,18 +347,16 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 					PathTable[k].ShortestDistance = distance;
 				}
 			}
+
+			// EXAMINE EACH NODE CONNECTION
+			// find the connection that matches the current row we are 
+			// looking at on PathTable
 			else
 			{
-				// EXAMINE CONNECTIONS
-				// for each entry in the table, go through each of the current node's connection and see if the lowest distance is recorded 
-				// Recall number of table values should be the same size as the # of connection a node has 
 				for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
 				{
-					// evaluate node connection and update table 
-					// is the previous node of the table the node that was recently removed from the unvisited nodes? 
-					// make sure we are working on the right nodes of both tables
-					// catch if the weight is less than the working node
-					// I also need to note the previous connection
+					// Update table per connection
+					// found the node in connections
 					if (PathTable[k].CurrentNode.ID == WorkingNodeTable[i].NodeID)
 					{
 						int distance = 0;
@@ -363,16 +367,28 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 
 							// Should this be a copy over? 
 							PathTable[k].PreviousNode = &WorkingNode; // the previous node should be the current working node
+
 						}
+
+						// Determine next node 
+						// if the current row in the table has a shorter path than recorded then remember that node
+						if (PathTable[k].ShortestDistance < Next.ShortestDistance) Next = PathTable[k];
+
+						break;
 					}
 				}
+
 			}
 		}
 
+		// update working node 
+		WorkingNode = Next.CurrentNode;
 
 		// Remove from unvisted and add to visited 
 		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNode));
 		UnvisitedNodes->RemoveNodeByID(CurrentNode);
+
+		if (UnvisitedNodes->GetSize() == 0) break;
 	}
 
 }
