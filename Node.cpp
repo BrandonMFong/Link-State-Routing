@@ -299,7 +299,7 @@ inline void GetDistance(struct Path Table[MAX], int& distance, int CurrentNodeID
 
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
-inline void Dijkstra(NodeList Nodes, int Source, int Destination)
+inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 {
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
 	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
@@ -310,20 +310,20 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 	for (int i = 0; i < Nodes.GetSize(); i++)
 	{
 		PathTable[i].CurrentNode = Nodes.GetByIndex(i);
-		if(PathTable[i].CurrentNode.ID == Source){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
+		if(PathTable[i].CurrentNode.ID == SourceID){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
 		else { PathTable[i].ShortestDistance = MAX + 1; }// infinity is usually represented by the number of nodes+1
 		PathTable[i].PreviousNode = new Node();
 	}
 
 	UnvisitedNodes->Copy(Nodes); // Copy over nodes
 
-	int CurrentNode = Source;
+	int CurrentNodeID = SourceID;
 	while (1)
 	{
 		cout << "\nSize of Visited array: " << VisitedNodes->GetSize() << endl;
 		cout << "Size of Unvisited array: " << UnvisitedNodes->GetSize() << endl;
 
-		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNode); // Init working node to source 
+		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNodeID); // Init working node to SourceID 
 		cout << "Current working node: " << WorkingNode.ID << endl;
 
 		/* Calculate shortest path */
@@ -382,11 +382,11 @@ inline void Dijkstra(NodeList Nodes, int Source, int Destination)
 		}
 
 		// update working node 
-		WorkingNode = Next.CurrentNode;
+		CurrentNodeID = Next.CurrentNode.ID;
 
 		// Remove from unvisted and add to visited 
-		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNode));
-		UnvisitedNodes->RemoveNodeByID(CurrentNode);
+		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNodeID));
+		UnvisitedNodes->RemoveNodeByID(CurrentNodeID);
 
 		if (UnvisitedNodes->GetSize() == 0) break;
 	}
