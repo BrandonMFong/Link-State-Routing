@@ -4,13 +4,13 @@
 #include <fstream>      // std::ifstream
 #include "json.hpp" // Use when it is ready to be parameterized
 
-// Priority is to establish the algorithm then do the configuration 
+#define Infinity 100
 
 using namespace std;
 using json = nlohmann::json;
 using ifstream = std::ifstream;
 
-typedef struct Table
+typedef struct Table // this could also be in the object 
 {
 	int NodeID, Weight;
 };
@@ -46,6 +46,7 @@ class Node
 			}
 		};
 
+
 		void GetTable(Table* Table)
 		{
 			for (int i = 0; i < Capacity; i++)
@@ -58,17 +59,41 @@ class Node
 		// This is a static approach
 		int GetNumberOfConnections() { return Capacity; }
 
+		Node* GetNodeConnectionById(int ID)
+		{
+			for (int i = 0; i < Capacity; i++)
+			{
+				if (ID == Connections[i]->GetNode()->ID) return Connections[i]->GetNode();
+			}
+		}
+
+		void Copy(Node original)
+		{
+			ID = original.ID; // Copy ID
+			Table* OGTable = new Table[MAX];
+			original.GetTable(OGTable);
+
+			// Go through original's table and copy them over
+			for (int i = 0; i < original.GetNumberOfConnections(); i++)
+			{
+				AddConnection(original.GetNodeConnectionById(OGTable[i].NodeID), OGTable[i].Weight);
+			}
+		}
+
 	private:
 		int Capacity = 0; // Number of connections to this node
 		class Connection
 		{
-			public:
-				Connection(Node* n, int weight) { Neighbor = n; Weight = weight; }
-				Connection() { Neighbor = 0; Weight = 0; }
+		public:
+			Connection(Node* n, int weight) { Neighbor = n; Weight = weight; }
+			Connection() { Neighbor = 0; Weight = 0; }
 
-				int GetWeight() { return Weight; }
+			int GetWeight() { return Weight; }
 
-				int GetID() { return Neighbor->ID; }
+			int GetID() { return Neighbor->ID; }
+
+			//Should be node instead of neighbor
+			Node* GetNode() { return Neighbor; }
 			private:
 				Node* Neighbor;
 				int Weight;
@@ -79,6 +104,11 @@ class Node
 		void InitConnections() { for (int i = 0; i < MAX; i++) { Connections[i] = new Connection(); } }
 
 };
+
+bool operator==(const Node& x, const Node& y)
+{
+	return x.ID == y.ID;
+}
 
 // I need a list of the nodes in a structure that is easy to add and remove
 // Outer layer should be able to read the list 
@@ -272,29 +302,31 @@ class NodeList
 		Item* List = nullptr; // this should be the first item in the list 
 };
 
+// This will hold distance from Source to Vector
+// Source node is external to this data 
 struct Path
 {
-	Node CurrentNode;
+	Node Vector;
 	int ShortestDistance;
 	Node* PreviousNode;
 };
 
-// Recursively working through the table to get the distance vector 
-inline void GetDistance(struct Path Table[MAX], int& distance, int CurrentNodeID)
+
+inline int GetDistance(Path Table[MAX],int index,int TotalDistance)
 {
-	for (int k = 0; k < MAX; k++)
+	int Distance = TotalDistance + Table[index].ShortestDistance;
+	for (int i = 0; i < MAX; i++)
 	{
-		if (Table[k].CurrentNode.ID == CurrentNodeID) // go to the right entry
+		if (Table[index].PreviousNode == nullptr) break;
+		else
 		{
-			Path row = Table[k];
-			if (row.CurrentNode.ID != 0)
+			if (*Table[index].PreviousNode == Table[i].Vector)
 			{
-				if (row.PreviousNode != nullptr) GetDistance(Table, distance, row.PreviousNode->ID);  // pass the previous node id only if it is not null
+				Distance += GetDistance(Table, i, Distance);
 			}
-			distance += Table[k].ShortestDistance; // Add the distance
-			break;
 		}
 	}
+	return Distance;
 }
 
 // Should Source/Destination be the index values for the array or node IDs? 
@@ -306,89 +338,56 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 	Path PathTable[MAX]; // using ten to be safe 
 	//Path* PathTablex = (struct Path*)malloc(Nodes.GetSize());
 
-	// Init table values 
+	// Init table values with all nodes from nodelist param 
 	for (int i = 0; i < Nodes.GetSize(); i++)
 	{
-		PathTable[i].CurrentNode = Nodes.GetByIndex(i);
-		if(PathTable[i].CurrentNode.ID == SourceID){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
-		else { PathTable[i].ShortestDistance = MAX + 1; }// infinity is usually represented by the number of nodes+1
+		PathTable[i].Vector = Nodes.GetByIndex(i);
+		if(PathTable[i].Vector.ID == SourceID){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
+		else { PathTable[i].ShortestDistance = Infinity; }// init infinity
 		PathTable[i].PreviousNode = new Node();
 	}
 
-	UnvisitedNodes->Copy(Nodes); // Copy over nodes
+	UnvisitedNodes->Copy(Nodes); // Copy all nodes to the array that tracks unvisited nodes
 
-	int CurrentNodeID = SourceID;
+	int WorkingNodeID = SourceID; // Init Working Node ID
+
+	// Traverse the connections  
 	while (1)
 	{
+		Node WorkingNode = UnvisitedNodes->GetNodeByID(WorkingNodeID); // Get working node by ID
+
 		cout << "\nSize of Visited array: " << VisitedNodes->GetSize() << endl;
 		cout << "Size of Unvisited array: " << UnvisitedNodes->GetSize() << endl;
-
-		Node WorkingNode = UnvisitedNodes->GetNodeByID(CurrentNodeID); // Init working node to SourceID 
 		cout << "Current working node: " << WorkingNode.ID << endl;
 
 		/* Calculate shortest path */
 
-		// Get current node's connection table
+		// Get working node's connection table
 		Table* WorkingNodeTable = new Table[MAX];
 		WorkingNode.GetTable(WorkingNodeTable);
 
-		Path Next = { *(new Node()), MAX + 1, nullptr };
 
-		// Go through each entry of the table
+		int Distance = 0;
+		Path ShorterPath = {*(new Node()), Infinity, nullptr};  // Keep a the closer node because we will visit the closest node next
+		// Go through each entry of the node's table and compare with working node's connections
 		for (int k = 0; k < (sizeof(PathTable) / sizeof(PathTable[0])); k++)
 		{
-			// EXAMINE CURRENT NODE
-			if (PathTable[k].CurrentNode.ID == WorkingNode.ID)
+			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
 			{
-				int distance = 0;
-				GetDistance(PathTable, distance, WorkingNode.ID);
-				if(distance < PathTable[k].ShortestDistance) // if there is a shorter distance
+				// if row is a connection on working node, calculate distance from source to this node
+				if (PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID)
 				{
-					PathTable[k].ShortestDistance = distance;
+					// remember k has the current index to the current row we are looking at
+					PathTable[k].ShortestDistance = GetDistance(PathTable,k,0); // Update distance from node to vector
+					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
+					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
 				}
-			}
-
-			// EXAMINE EACH NODE CONNECTION
-			// find the connection that matches the current row we are 
-			// looking at on PathTable
-			else
-			{
-				for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
-				{
-					// Update table per connection
-					// found the node in connections
-					if (PathTable[k].CurrentNode.ID == WorkingNodeTable[i].NodeID)
-					{
-						int distance = 0;
-						GetDistance(PathTable, distance, WorkingNodeTable[i].NodeID);
-						if (distance < PathTable[k].ShortestDistance)
-						{
-							PathTable[k].ShortestDistance = distance;
-
-							// Should this be a copy over? 
-							PathTable[k].PreviousNode = &WorkingNode; // the previous node should be the current working node
-
-						}
-
-						// Determine next node 
-						// if the current row in the table has a shorter path than recorded then remember that node
-						if (PathTable[k].ShortestDistance < Next.ShortestDistance) Next = PathTable[k];
-
-						break;
-					}
-				}
-
 			}
 		}
 
-		// update working node 
-		CurrentNodeID = Next.CurrentNode.ID;
-
-		// Remove from unvisted and add to visited 
-		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(CurrentNodeID));
-		UnvisitedNodes->RemoveNodeByID(CurrentNodeID);
-
-		if (UnvisitedNodes->GetSize() == 0) break;
+		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
+		UnvisitedNodes->RemoveNodeByID(WorkingNodeID); 
+		WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
 	}
 
 }
