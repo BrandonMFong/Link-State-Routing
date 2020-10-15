@@ -312,17 +312,19 @@ struct Path
 };
 
 
-inline int GetDistance(Path Table[MAX],int index,int TotalDistance)
+inline int GetDistance(Path Table[], int TableSize,int index,int TotalDistance)
 {
-	int Distance = TotalDistance + Table[index].ShortestDistance;
-	for (int i = 0; i < MAX; i++)
+	int Distance = TotalDistance + ((Table[index].ShortestDistance == Infinity) ? 0 : Table[index].ShortestDistance);
+	for (int i = 0; i < TableSize; i++)
 	{
 		if (Table[index].PreviousNode == nullptr) break;
 		else
 		{
-			if (*Table[index].PreviousNode == Table[i].Vector)
+			Node PNode = *Table[index].PreviousNode; // TODO is not indexing
+			Node CNode = Table[i].Vector;
+			if (PNode == CNode)
 			{
-				Distance += GetDistance(Table, i, Distance);
+				Distance += GetDistance(Table,TableSize,i,Distance);
 			}
 		}
 	}
@@ -336,10 +338,11 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
 	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
 	Path PathTable[MAX]; // using ten to be safe 
+	int NumNodes = Nodes.GetSize();
 	//Path* PathTablex = (struct Path*)malloc(Nodes.GetSize());
 
 	// Init table values with all nodes from nodelist param 
-	for (int i = 0; i < Nodes.GetSize(); i++)
+	for (int i = 0; i < NumNodes; i++)
 	{
 		PathTable[i].Vector = Nodes.GetByIndex(i);
 		if(PathTable[i].Vector.ID == SourceID){ PathTable[i].ShortestDistance = 0; }// if current node entree, then put 0 distance 
@@ -367,10 +370,9 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 		WorkingNode.GetTable(WorkingNodeTable);
 
 
-		int Distance = 0;
 		Path ShorterPath = {*(new Node()), Infinity, nullptr};  // Keep a the closer node because we will visit the closest node next
 		// Go through each entry of the node's table and compare with working node's connections
-		for (int k = 0; k < (sizeof(PathTable) / sizeof(PathTable[0])); k++)
+		for (int k = 0; k < NumNodes; k++)
 		{
 			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
 			{
@@ -378,7 +380,7 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 				if (PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID)
 				{
 					// remember k has the current index to the current row we are looking at
-					PathTable[k].ShortestDistance = GetDistance(PathTable,k,0); // Update distance from node to vector
+					PathTable[k].ShortestDistance = GetDistance(PathTable, NumNodes,k,0); // Update distance from node to vector
 					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
 				}
