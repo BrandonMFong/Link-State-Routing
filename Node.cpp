@@ -105,7 +105,7 @@ class Node
 
 };
 
-bool operator==(const Node& x, const Node& y)
+inline bool operator==(const Node& x, const Node& y)
 {
 	return x.ID == y.ID;
 }
