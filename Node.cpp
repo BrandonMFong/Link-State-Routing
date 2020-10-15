@@ -387,7 +387,10 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 
 		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
 		UnvisitedNodes->RemoveNodeByID(WorkingNodeID); 
-		WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
+
+		// if the next node to evaluate is the destination, stop algorithm 
+		if (Destination == ShorterPath.Vector.ID) break;
+		else WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
 	}
 
 }
