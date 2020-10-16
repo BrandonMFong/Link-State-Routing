@@ -353,16 +353,16 @@ inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int De
 	int Distance = TotalDistance 
 		+ ((row.ShortestDistance == Infinity) ? 0 : row.ShortestDistance) 
 		+ row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
-	for (int i = 0; i < TableSize; i++)
+
+	// If ID is not 0
+	if (SourceNodeID != 0)
 	{
-		if (row.PreviousNode->ID == 0) break;
-		else
+		// Go through the table to find the sourcenode's row and pass its index to the table
+		for (int i = 0; i < TableSize; i++)
 		{
-			Node* PNode = row.PreviousNode; 
-			Node CNode = Table[i].Vector;
-			if (PNode == CNode)
+			if (Table[i].Vector.ID == SourceNodeID)
 			{
-				Distance += GetDistance(Table,TableSize,PNode->ID,i,Distance);
+				Distance += GetDistance(Table, TableSize, Table[i].PreviousNode->ID, i, Distance); // TODO make sure this backtracks
 			}
 		}
 	}
