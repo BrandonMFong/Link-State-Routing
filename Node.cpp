@@ -165,10 +165,12 @@ class NodeList
 		{
 			Node* results = new Node(); // return value 
 			Item* temp = List; // temp 
+			int size = GetSize();
 
-			for (int i = 0; i < GetSize(); i++)
+			for (int i = 0; i < size; i++)
 			{
-				if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }
+				//if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }}
+				if (temp->GetNode()->ID == ID) { return *temp->GetNode();}
 				else { temp = temp->GetRight(); }
 			}
 			return *results;
@@ -448,8 +450,9 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 					
 					// Why is iteration n index writing into iteration n-1 index?
 					// Address is being returned twice
-					// new is returning the same address
-					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
+					// new is returning same address
+					// Instead of giving the address to the pointer, give it the value
+					*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 
 					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
 					DestinationIndex = k; // Save this row index in case this is the final node 
