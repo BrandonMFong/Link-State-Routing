@@ -109,6 +109,10 @@ inline bool operator==(const Node& x, const Node& y)
 {
 	return x.ID == y.ID;
 }
+inline bool operator==(const Node * x, const Node& y)
+{
+	return x->ID == y.ID;
+}
 
 // I need a list of the nodes in a structure that is easy to add and remove
 // Outer layer should be able to read the list 
@@ -312,15 +316,15 @@ struct Path
 };
 
 
-inline int GetDistance(Path Table[], int TableSize,int index,int TotalDistance)
+inline int GetDistance(struct Path Table[], int TableSize,int index,int TotalDistance)
 {
 	int Distance = TotalDistance + ((Table[index].ShortestDistance == Infinity) ? 0 : Table[index].ShortestDistance);
 	for (int i = 0; i < TableSize; i++)
 	{
-		if (Table[index].PreviousNode == nullptr) break;
+		if (Table[index].PreviousNode->ID == 0) break;
 		else
 		{
-			Node PNode = *Table[index].PreviousNode; // TODO is not indexing
+			Node* PNode = Table[index].PreviousNode; // TODO is not indexing
 			Node CNode = Table[i].Vector;
 			if (PNode == CNode)
 			{
@@ -394,5 +398,4 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 		if (Destination == ShorterPath.Vector.ID) break;
 		else WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
 	}
-
 }
