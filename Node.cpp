@@ -445,7 +445,12 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 				{
 					// remember k has the current index to the current row we are looking at
 					PathTable[k].ShortestDistance = GetDistance(PathTable,NumNodes,WorkingNode.ID,k,0); // Update distance from node to vector
+					
+					// Why is iteration n index writing into iteration n-1 index?
+					// Address is being returned twice
+					// new is returning the same address
 					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
+
 					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
 					DestinationIndex = k; // Save this row index in case this is the final node 
 					break;
