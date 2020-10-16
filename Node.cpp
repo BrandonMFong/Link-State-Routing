@@ -375,10 +375,23 @@ inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int De
 	return Distance;
 }
 
-//inline bool WasVisited(NodeList* VisitedNodes, struct Path Path)
-//{
-//	return false;
-//}
+// First print backwards
+inline void PrintShortestPath(struct Path Table[],int size,int i)
+{
+	Path row = Table[i];
+	cout << row.Vector.ID;
+	if (row.PreviousNode->ID != 0) // If there is still more
+	{
+		for (int k = 0; k < size; k++)
+		{
+			if (Table[k].Vector.ID == row.PreviousNode->ID)
+			{
+				cout << " <- ";
+				PrintShortestPath(Table, size, k);
+			}
+		}
+	}
+}
 
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
@@ -402,6 +415,8 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 	UnvisitedNodes->Copy(Nodes); // Copy all nodes to the array that tracks unvisited nodes
 
 	int WorkingNodeID = SourceID; // Init Working Node ID
+
+	int DestinationIndex = MAX;
 
 	// Traverse the connections  
 	while (1)
@@ -432,6 +447,8 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 					PathTable[k].ShortestDistance = GetDistance(PathTable,NumNodes,WorkingNode.ID,k,0); // Update distance from node to vector
 					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
+					DestinationIndex = k; // Save this row index in case this is the final node 
+					break;
 				}
 			}
 		}
@@ -443,4 +460,7 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 		if (Destination == ShorterPath.Vector.ID) break;
 		else WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
 	}
+
+	cout << "Shortest path:" << endl;
+	PrintShortestPath(PathTable,NumNodes,DestinationIndex);
 }
