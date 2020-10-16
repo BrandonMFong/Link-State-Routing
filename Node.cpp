@@ -454,8 +454,11 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 					// Instead of giving the address to the pointer, give it the value
 					*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 
-					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
-					DestinationIndex = k; // Save this row index in case this is the final node 
+					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
+					{
+						ShorterPath = PathTable[k];
+						DestinationIndex = k; // Save this row index in case this is the final node 
+					}
 					break;
 				}
 			}

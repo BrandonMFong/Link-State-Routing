@@ -84,7 +84,7 @@ int main()
 	cout << "We want to find the shortest path from node " << Source << " to " << Destination << endl;
 
 	// TODO implement algorithm 
-
+	// 1 to 6 needs work
 	Dijkstra(Nodes, Source, Destination);
 
 }
