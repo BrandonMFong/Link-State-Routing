@@ -10,6 +10,8 @@ using namespace std;
 using json = nlohmann::json;
 using ifstream = std::ifstream;
 
+class Node;
+
 typedef struct Table // this could also be in the object 
 {
 	int NodeID, Weight;
@@ -17,6 +19,9 @@ typedef struct Table // this could also be in the object
 
 static const int MaxNodesInNetwork = 7;
 static const int MAX = 10; // Max connectin a node can have on a network 
+
+inline bool operator==(const Node* x, const Node& y);
+inline bool operator==(const Node* x, const Node& y);
 
 class Node
 {
@@ -85,7 +90,7 @@ class Node
 			int weight = 0;
 			for (int i = 0; i < Capacity; i++)
 			{
-				if (Connections[i]->GetNode() == Node)weight = Connections[i]->GetWeight();
+				if (Connections[i]->GetNode() == Node) weight = Connections[i]->GetWeight();
 			}
 			return weight;
 		}
@@ -350,9 +355,8 @@ struct Path
 inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int DestinationNodeIndex,int TotalDistance)
 {
 	Path row = Table[DestinationNodeIndex];// current vertex 
-	int Distance = TotalDistance 
-		+ ((row.ShortestDistance == Infinity) ? 0 : row.ShortestDistance) 
-		+ row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
+	int Distance = TotalDistance
+		+ ((row.ShortestDistance == Infinity) ? row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID)) : row.ShortestDistance);
 
 	// If ID is not 0
 	if (SourceNodeID != 0)
@@ -360,9 +364,11 @@ inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int De
 		// Go through the table to find the sourcenode's row and pass its index to the table
 		for (int i = 0; i < TableSize; i++)
 		{
-			if (Table[i].Vector.ID == SourceNodeID)
+			if ((Table[i].Vector.ID == SourceNodeID) && (Table[i].PreviousNode->ID != 0))
 			{
-				Distance += GetDistance(Table, TableSize, Table[i].PreviousNode->ID, i, Distance); // TODO make sure this backtracks
+				// Passing previous node of source node to SourceNodeID because we are assuming the sourcenode is a node we visited
+				// Therefore it should already have a previousNode marked in the table array 
+				Distance = GetDistance(Table, TableSize, Table[i].PreviousNode->ID, i, Distance); // TODO make sure this backtracks
 			}
 		}
 	}
