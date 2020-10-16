@@ -338,11 +338,21 @@ struct Path
 	Node* PreviousNode;
 };
 
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Table"></param>
+/// <param name="TableSize"></param>
+/// <param name="SourceNodeID">The working node outside this function</param>
+/// <param name="DestinationNodeIndex">index to the vector on the table </param>
+/// <param name="TotalDistance"></param>
+/// <returns></returns>
 inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int DestinationNodeIndex,int TotalDistance)
 {
 	Path row = Table[DestinationNodeIndex];// current vertex 
-	int Distance = TotalDistance + ((row.ShortestDistance == Infinity) ? 0 : row.ShortestDistance) + row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
+	int Distance = TotalDistance 
+		+ ((row.ShortestDistance == Infinity) ? 0 : row.ShortestDistance) 
+		+ row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
 	for (int i = 0; i < TableSize; i++)
 	{
 		if (row.PreviousNode->ID == 0) break;
@@ -352,7 +362,7 @@ inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int De
 			Node CNode = Table[i].Vector;
 			if (PNode == CNode)
 			{
-				Distance += GetDistance(Table,TableSize,i,Distance);
+				Distance += GetDistance(Table,TableSize,PNode->ID,i,Distance);
 			}
 		}
 	}
@@ -410,10 +420,10 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)// connection
 			{
 				// if row is a connection on working node AND we haven't visited this, calculate distance from source to this node
-				if ((PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID) && !VisitedNodes->Contains(PathTable[k].Vector))
+				if ((PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID) && !VisitedNodes->Contains(PathTable[k].Vector))// connection in table
 				{
 					// remember k has the current index to the current row we are looking at
-					PathTable[k].ShortestDistance = GetDistance(PathTable, NumNodes,k,0); // Update distance from node to vector
+					PathTable[k].ShortestDistance = GetDistance(PathTable,NumNodes,WorkingNode.ID,k,0); // Update distance from node to vector
 					PathTable[k].PreviousNode = &Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) ShorterPath = PathTable[k];// Find the next node to evaluate
 				}
