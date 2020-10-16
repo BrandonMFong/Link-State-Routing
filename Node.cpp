@@ -80,6 +80,16 @@ class Node
 			}
 		}
 
+		int GetWeightToNode(Node Node)
+		{
+			int weight = 0;
+			for (int i = 0; i < Capacity; i++)
+			{
+				if (Connections[i]->GetNode() == Node)weight = Connections[i]->GetWeight();
+			}
+			return weight;
+		}
+
 	private:
 		int Capacity = 0; // Number of connections to this node
 		class Connection
@@ -143,6 +153,7 @@ class NodeList
 				}
 				return *temp->GetNode();
 			}
+			else return *(new Node());
 		}
 
 		Node GetNodeByID(int ID)
@@ -155,7 +166,6 @@ class NodeList
 				if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }
 				else { temp = temp->GetRight(); }
 			}
-
 			return *results;
 		}
 
@@ -242,6 +252,19 @@ class NodeList
 			}
 		}
 
+		bool Contains(Node Node)
+		{
+			bool found = false;
+			Item* temp = List; // temp 
+
+			for (int i = 0; i < GetSize(); i++)
+			{
+				if (temp->GetNode()->ID == Node.ID) { found = true; break; }
+				else { temp = temp->GetRight(); }
+			}
+			return found;
+		}
+
 	private:
 		//int size;
 		class Item
@@ -316,15 +339,16 @@ struct Path
 };
 
 
-inline int GetDistance(struct Path Table[], int TableSize,int index,int TotalDistance)
+inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int DestinationNodeIndex,int TotalDistance)
 {
-	int Distance = TotalDistance + ((Table[index].ShortestDistance == Infinity) ? 0 : Table[index].ShortestDistance);
+	Path row = Table[DestinationNodeIndex];// current vertex 
+	int Distance = TotalDistance + ((row.ShortestDistance == Infinity) ? 0 : row.ShortestDistance) + row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
 	for (int i = 0; i < TableSize; i++)
 	{
-		if (Table[index].PreviousNode->ID == 0) break;
+		if (row.PreviousNode->ID == 0) break;
 		else
 		{
-			Node* PNode = Table[index].PreviousNode; // TODO is not indexing
+			Node* PNode = row.PreviousNode; 
 			Node CNode = Table[i].Vector;
 			if (PNode == CNode)
 			{
@@ -334,6 +358,11 @@ inline int GetDistance(struct Path Table[], int TableSize,int index,int TotalDis
 	}
 	return Distance;
 }
+
+//inline bool WasVisited(NodeList* VisitedNodes, struct Path Path)
+//{
+//	return false;
+//}
 
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
@@ -376,12 +405,12 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 
 		Path ShorterPath = {*(new Node()), Infinity, nullptr};  // Keep a the closer node because we will visit the closest node next
 		// Go through each entry of the node's table and compare with working node's connections
-		for (int k = 0; k < NumNodes; k++)
+		for (int k = 0; k < NumNodes; k++)// table
 		{
-			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)
+			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)// connection
 			{
-				// if row is a connection on working node, calculate distance from source to this node
-				if (PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID)
+				// if row is a connection on working node AND we haven't visited this, calculate distance from source to this node
+				if ((PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID) && !VisitedNodes->Contains(PathTable[k].Vector))
 				{
 					// remember k has the current index to the current row we are looking at
 					PathTable[k].ShortestDistance = GetDistance(PathTable, NumNodes,k,0); // Update distance from node to vector

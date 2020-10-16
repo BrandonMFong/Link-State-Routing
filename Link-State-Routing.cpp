@@ -34,7 +34,7 @@ int main()
 	Node4.AddConnection(&Node7, 3);
 	// Node 5 
 	Node5.AddConnection(&Node1, 9);
-	Node5.AddConnection(&Node6, 6);
+	Node5.AddConnection(&Node2, 6);
 	// Node 6
 	Node6.AddConnection(&Node2, 8);
 	Node6.AddConnection(&Node3, 2);
