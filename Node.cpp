@@ -357,8 +357,9 @@ struct Path
 inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int DestinationNodeIndex,int TotalDistance)
 {
 	Path row = Table[DestinationNodeIndex];// current vertex 
-	int Distance = TotalDistance
-		+ ((row.ShortestDistance == Infinity) ? row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID)) : row.ShortestDistance);
+	//int Distance = TotalDistance
+	//	+ ((row.ShortestDistance == Infinity) ? row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID)) : row.ShortestDistance);
+	int Distance = TotalDistance + row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
 
 	// If ID is not 0
 	if (SourceNodeID != 0)
@@ -443,10 +444,13 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)// connection
 			{
 				// if row is a connection on working node AND we haven't visited this, calculate distance from source to this node
+				// k holds the num row of the working node's connection in the table
 				if ((PathTable[k].Vector.ID == WorkingNodeTable[i].NodeID) && !VisitedNodes->Contains(PathTable[k].Vector))// connection in table
 				{
 					// remember k has the current index to the current row we are looking at
-					PathTable[k].ShortestDistance = GetDistance(PathTable,NumNodes,WorkingNode.ID,k,0); // Update distance from node to vector
+
+					int TempDistance = GetDistance(PathTable, NumNodes, WorkingNode.ID, k, 0);
+					PathTable[k].ShortestDistance = (PathTable[k].ShortestDistance > TempDistance) ? TempDistance : PathTable[k].ShortestDistance;// Update distance from node to vector if we found something better
 					
 					// Why is iteration n index writing into iteration n-1 index?
 					// Address is being returned twice
