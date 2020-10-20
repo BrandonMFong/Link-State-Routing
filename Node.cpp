@@ -138,7 +138,14 @@ class NodeList
 	public:
 		NodeList() {};
 
-		void Add(Node* item)
+		//void Add(Node* item)
+		//{
+		//	// If the list is empty 
+		//	if (List == nullptr)List = new Item(item);
+		//	else List->Add(item);
+		//}
+
+		void Add(Node item)
 		{
 			// If the list is empty 
 			if (List == nullptr)List = new Item(item);
@@ -156,7 +163,7 @@ class NodeList
 				{
 					temp = temp->GetRight();
 				}
-				return *temp->GetNode();
+				return temp->GetNode();
 			}
 			else return *(new Node());
 		}
@@ -170,7 +177,7 @@ class NodeList
 			for (int i = 0; i < size; i++)
 			{
 				//if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }}
-				if (temp->GetNode()->ID == ID) { return *temp->GetNode();}
+				if (temp->GetNode().ID == ID) { return temp->GetNode();}
 				else { temp = temp->GetRight(); }
 			}
 			return *results;
@@ -185,7 +192,7 @@ class NodeList
 			{
 				// If I found the item with the correct node id, then take that out of the list and close it
 				// I need to remove the item from memory
-				if (temp->GetNode()->ID == ID) 
+				if (temp->GetNode().ID == ID) 
 				{ 
 					// I am wondering if there is a more efficient way to determine if the temp var is the first or last
 
@@ -266,7 +273,7 @@ class NodeList
 
 			for (int i = 0; i < GetSize(); i++)
 			{
-				if (temp->GetNode()->ID == Node.ID) { found = true; break; }
+				if (temp->GetNode().ID == Node.ID) { found = true; break; }
 				else { temp = temp->GetRight(); }
 			}
 			return found;
@@ -290,14 +297,14 @@ class NodeList
 				}*/
 
 				// init list
-				Item(Node* C)
+				Item(Node C)
 				{
 					Left = nullptr; Right = nullptr; Current = C;
 				}
 
 				// adding to an already existing list
 				// Do I need this? 
-				Item(Node* C, Item* L, Item* R)
+				Item(Node C, Item* L, Item* R)
 				{
 					Left = L; Right = R; Current = C;
 				}
@@ -308,14 +315,14 @@ class NodeList
 				// Get
 				Item* GetRight() { return Right; }
 				Item* GetLeft() { return Left; }
-				Node* GetNode() { return Current; }
+				Node GetNode() { return Current; }
 
 				// Set
 				void SetRight(Item* value) { Right = value; }
 				void SetLeft(Item* value) { Left = value; }
 
 				// Adds at the end of the list
-				void Add(Node* item)
+				void Add(Node item)
 				{
 					Item* temp = this;
 
@@ -329,7 +336,7 @@ class NodeList
 			private:
 				Item* Left = nullptr;
 				Item* Right = nullptr;
-				Node* Current = nullptr;
+				Node Current = *new Node();
 		};
 
 	//protected:
@@ -474,14 +481,17 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 			// Since we are going through the whole table regardless, figure out the next node to evaluate
 			// if we didn't visit this yet AND it has the shortest distance from the start vertex in the table (ie shortest distance from the start vertex)
 			// also make sure we aren't considering the distance from the source to the source
-			if (!VisitedNodes->Contains(PathTable[k].Vector) && (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) && (PathTable[k].ShortestDistance > 0))
+			if ((PathTable[k].ShortestDistance > 0) && (PathTable[k].Vector.ID != WorkingNodeID))
 			{
-				ShorterPath = PathTable[k];
-				DestinationIndex = k; // Save this row index in case this is the final node 
+				if (!VisitedNodes->Contains(PathTable[k].Vector) && (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance))
+				{
+					ShorterPath = PathTable[k];
+					DestinationIndex = k; // Save this row index in case this is the final node 
+				}
 			}
 		}
 
-		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
+		VisitedNodes->Add(UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
 		UnvisitedNodes->RemoveNodeByID(WorkingNodeID); 
 
 		// if the next node to evaluate is the destination, stop algorithm 

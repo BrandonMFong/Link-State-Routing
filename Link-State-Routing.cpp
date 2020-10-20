@@ -45,13 +45,13 @@ int main()
 
 	// Organize in array 
 	NodeList Nodes = NodeList();
-	Nodes.Add(&Node1);
-	Nodes.Add(&Node2);
-	Nodes.Add(&Node3);
-	Nodes.Add(&Node4);
-	Nodes.Add(&Node5);
-	Nodes.Add(&Node6);
-	Nodes.Add(&Node7);
+	Nodes.Add(Node1);
+	Nodes.Add(Node2);
+	Nodes.Add(Node3);
+	Nodes.Add(Node4);
+	Nodes.Add(Node5);
+	Nodes.Add(Node6);
+	Nodes.Add(Node7);
 
 	unsigned int size = Nodes.GetSize();
 
