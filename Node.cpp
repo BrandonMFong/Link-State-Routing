@@ -187,8 +187,9 @@ class NodeList
 		{
 			Node* results = new Node(); // return value 
 			Item* temp = List; // temp 
+			int size = GetSize();
 
-			for (int i = 0; i < GetSize(); i++)
+			for (int i = 0; i < size; i++)
 			{
 				// If I found the item with the correct node id, then take that out of the list and close it
 				// I need to remove the item from memory
@@ -208,6 +209,7 @@ class NodeList
 					else if (temp->GetLeft() == nullptr)
 					{
 						List = temp->GetRight();
+						List->SetLeft(nullptr);// Need to make sure list starts with a left null pointer
 						// Remove current node 
 						delete temp;
 						break;
