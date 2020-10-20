@@ -470,6 +470,15 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 					break;
 				}
 			}
+
+			// Since we are going through the whole table regardless, figure out the next node to evaluate
+			// if we didn't visit this yet AND it has the shortest distance from the start vertex in the table (ie shortest distance from the start vertex)
+			// also make sure we aren't considering the distance from the source to the source
+			if (!VisitedNodes->Contains(PathTable[k].Vector) && (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance) && (PathTable[k].ShortestDistance > 0))
+			{
+				ShorterPath = PathTable[k];
+				DestinationIndex = k; // Save this row index in case this is the final node 
+			}
 		}
 
 		VisitedNodes->Add(&UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
