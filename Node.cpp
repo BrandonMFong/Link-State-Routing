@@ -17,6 +17,7 @@ typedef struct Table // this could also be in the object
 	int NodeID, Weight;
 };
 
+
 static const int MaxNodesInNetwork = 7;
 static const int MAX = 10; // Max connectin a node can have on a network 
 
@@ -137,13 +138,6 @@ class NodeList
 {
 	public:
 		NodeList() {};
-
-		//void Add(Node* item)
-		//{
-		//	// If the list is empty 
-		//	if (List == nullptr)List = new Item(item);
-		//	else List->Add(item);
-		//}
 
 		void Add(Node item)
 		{
@@ -282,21 +276,12 @@ class NodeList
 		}
 
 	private:
-		//int size;
 		class Item
 		{
 			public:
 
 				// Constructors 
 				Item() {}
-
-				// Destructor 
-				/*~Item()
-				{
-					delete[]Left;
-					delete[]Right;
-					delete[]Current;
-				}*/
 
 				// init list
 				Item(Node C)
@@ -366,8 +351,6 @@ struct Path
 inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int DestinationNodeIndex,int TotalDistance)
 {
 	Path row = Table[DestinationNodeIndex];// current vertex 
-	//int Distance = TotalDistance
-	//	+ ((row.ShortestDistance == Infinity) ? row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID)) : row.ShortestDistance);
 	int Distance = TotalDistance + row.Vector.GetWeightToNode(*row.Vector.GetNodeConnectionById(SourceNodeID));
 
 	// If ID is not 0
@@ -407,6 +390,9 @@ inline void PrintShortestPath(struct Path Table[],int size,int i)
 
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
+/// <summary>
+/// should return path table
+/// </summary>
 inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 {
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
@@ -468,14 +454,6 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 						// Instead of giving the address to the pointer, give it the value
 						*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					}
-
-					//if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
-					////We need to consider the distance from source node through current working node
-					////if (TempDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
-					//{
-					//	ShorterPath = PathTable[k];
-					//	DestinationIndex = k; // Save this row index in case this is the final node 
-					//}
 					break;
 				}
 			}
