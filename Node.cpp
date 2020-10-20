@@ -371,7 +371,7 @@ inline int GetDistance(struct Path Table[],int TableSize,int SourceNodeID,int De
 			{
 				// Passing previous node of source node to SourceNodeID because we are assuming the sourcenode is a node we visited
 				// Therefore it should already have a previousNode marked in the table array 
-				Distance = GetDistance(Table, TableSize, Table[i].PreviousNode->ID, i, Distance); // TODO make sure this backtracks
+				Distance = GetDistance(Table, TableSize, Table[i].PreviousNode->ID, i, Distance); 
 			}
 		}
 	}
@@ -435,13 +435,14 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 		// Get working node's connection table
 		Table* WorkingNodeTable = new Table[MAX];
 		WorkingNode.GetTable(WorkingNodeTable);
+		int WorkingTableNumConnections = WorkingNode.GetNumberOfConnections();
 
 
 		Path ShorterPath = {*(new Node()), Infinity, nullptr};  // Keep a the closer node because we will visit the closest node next
 		// Go through each entry of the node's table and compare with working node's connections
 		for (int k = 0; k < NumNodes; k++)// table
 		{
-			for (int i = 0; i < WorkingNode.GetNumberOfConnections(); i++)// connection
+			for (int i = 0; i < WorkingTableNumConnections; i++)// connection
 			{
 				// if row is a connection on working node AND we haven't visited this, calculate distance from source to this node
 				// k holds the num row of the working node's connection in the table
@@ -450,19 +451,22 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 					// remember k has the current index to the current row we are looking at
 
 					int TempDistance = GetDistance(PathTable, NumNodes, WorkingNode.ID, k, 0);
-					PathTable[k].ShortestDistance = (PathTable[k].ShortestDistance > TempDistance) ? TempDistance : PathTable[k].ShortestDistance;// Update distance from node to vector if we found something better
 					
-					// Why is iteration n index writing into iteration n-1 index?
-					// Address is being returned twice
-					// new is returning same address
-					// Instead of giving the address to the pointer, give it the value
-					*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
-
-					if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
+					if (PathTable[k].ShortestDistance > TempDistance) // if we found a new short path through current working node
 					{
-						ShorterPath = PathTable[k];
-						DestinationIndex = k; // Save this row index in case this is the final node 
+						PathTable[k].ShortestDistance = TempDistance;
+
+						// Instead of giving the address to the pointer, give it the value
+						*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					}
+
+					//if (PathTable[k].ShortestDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
+					////We need to consider the distance from source node through current working node
+					////if (TempDistance < ShorterPath.ShortestDistance)// Find the next node to evaluate
+					//{
+					//	ShorterPath = PathTable[k];
+					//	DestinationIndex = k; // Save this row index in case this is the final node 
+					//}
 					break;
 				}
 			}
