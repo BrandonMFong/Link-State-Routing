@@ -88,6 +88,6 @@ int main()
 
 	NodeList NodePath = Dijkstra(Nodes, Source, Destination);
 
-	cout << "Path from Node " << Source << " to " << Destination << " is: " << endl;
+	cout << "\nPath from Node " << Source << " to " << Destination << " is: " << endl;
 	NodePath.PrintPath(); 
 }
