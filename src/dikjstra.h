@@ -52,12 +52,46 @@ inline void PrintShortestPath(struct Path Table[], int size, int i)
 	}
 }
 
+/// <summary>
+/// Gets the path type var and puts the path in order in a nodelist object
+/// </summary>
+/// <param name="Table"></param>
+/// <param name="size"></param>
+/// <param name="SourceID"></param>
+/// <param name="DestinationID"></param>
+/// <returns></returns>
+inline NodeList GetPathFromTable(struct Path Table[], int size, int SourceID, int DestinationID)
+{
+	// init list on result variable 
+	// we want to reverse the order of the path tabel so we can print out the path from beginning to end
+	// that order will be in here, result var
+	// we need to have a method that inserts a node before an index in the list, i.e. InsertBefore()
+	NodeList * result = new NodeList();
+	Node* PreviousVertex = new Node();
+	int i = 0;
+	while (1)
+	{
+		for (i = 0; i < size; i++)
+		{
+			if (DestinationID == Table[i].Vector.ID)
+			{
+				result->InsertBefore(Table[i].Vector, *PreviousVertex); // this might cause issues
+				*PreviousVertex = Table[i].Vector; 
+				DestinationID = Table[i].PreviousNode->ID;
+				break;
+			}
+		}
+		if (SourceID == Table[i].Vector.ID)break; // if we are at the end 
+	}
+	return *result;
+}
+
 // Should Source/Destination be the index values for the array or node IDs? 
 // Should be Node IDs 
 /// <summary>
 /// should return path table
 /// </summary>
-inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
+inline NodeList Dijkstra(NodeList Nodes, int SourceID, int Destination)
 {
 	NodeList* VisitedNodes = new NodeList();  // Visited Node array 
 	NodeList* UnvisitedNodes = new NodeList(); // Unvisited Node array 
@@ -142,6 +176,7 @@ inline void Dijkstra(NodeList Nodes, int SourceID, int Destination)
 		else WorkingNodeID = ShorterPath.Vector.ID; // Get next node to look at 
 	}
 
-	cout << "Shortest path:" << endl;
-	PrintShortestPath(PathTable, NumNodes, DestinationIndex);
+	NodeList SourceToDestination = GetPathFromTable(PathTable, NumNodes, SourceID, Destination); // Destination ID? 
+
+	return SourceToDestination;
 }

@@ -7,6 +7,7 @@
 // Recall that in Link state routing all switches send out a broadcast of all links
 // So we assume we know every node and its connection 
 
+// TODO make this configurable	
 int main()
 {
 	// Following figure 18.9 from text 
@@ -85,6 +86,8 @@ int main()
 
 	cout << "We want to find the shortest path from node " << Source << " to " << Destination << endl;
 
-	Dijkstra(Nodes, Source, Destination);
+	NodeList NodePath = Dijkstra(Nodes, Source, Destination);
 
+	cout << "Path from Node " << Source << " to " << Destination << " is: " << endl;
+	NodePath.PrintPath(); 
 }

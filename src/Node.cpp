@@ -5,6 +5,8 @@
 #include "json.hpp" // Use when it is ready to be parameterized
 #include "Node.h"
 
+
+/* NODE CLASS START */
 Node::Node()
 {
 	ID = 0;
@@ -90,6 +92,10 @@ inline bool operator==(const Node * x, const Node& y)
 {
 	return x->ID == y.ID;
 }
+
+/* NODE CLASS END */
+
+/* NODELIST CLASS START */
 
 // I need a list of the nodes in a structure that is easy to add and remove
 // Outer layer should be able to read the list 
@@ -224,8 +230,9 @@ bool NodeList::Contains(Node Node)
 {
 	bool found = false;
 	Item* temp = List; // temp 
+	int size = GetSize();
 
-	for (int i = 0; i < GetSize(); i++)
+	for (int i = 0; i < size; i++)
 	{
 		if (temp->GetNode().ID == Node.ID) { found = true; break; }
 		else { temp = temp->GetRight(); }
@@ -233,6 +240,68 @@ bool NodeList::Contains(Node Node)
 	return found;
 }
 
+void NodeList::InsertBefore(Node insert, Node before)
+{
+	if (List == nullptr) List = new Item(insert); // If we are writing into an empty list 
+	else
+	{
+		Item* temp = List; // temp 
+		int size = GetSize();
+		for (int i = 0; i < size; i++)
+		{
+			// I need to check the following
+			// 1 - if the node I found is the first in the list.  Therefore I need to reset List pointer 
+			// 2 - If the node I found is the last in the list or in the middle.  This would mean I need to rearrange pointers 
+			// TODO implement 1 and 2
+			if (temp->GetNode().ID == before.ID)
+			{
+				Item* insertee = new Item(insert);
+				if (temp->GetLeft() == nullptr) // case 1
+				{
+					temp->SetLeft(insertee); // Insert 
+					Item* hold = temp;
+					temp = temp->GetLeft(); // Switch to the 'before' node
+					temp->SetLeft(nullptr); // initialize the first node on the list's left to null
+					temp->SetRight(hold); // set its right pointer to the former first node
+
+					List = insertee;
+				}
+
+				// in the case for dikjstra, we will never be in this scenario 
+				else // case 2
+				{
+					Item* Right = temp;
+					Item* Left = temp->GetLeft(); 
+
+					// Put insert in the middle 
+					Left->SetRight(insertee);
+					Right->SetLeft(insertee);
+					insertee->SetLeft(Left);
+					insertee->SetRight(Right);
+
+					List = insertee;
+				}
+				// recall we are inserting before, so we will never put anything after the last node for this method
+				// that is reserved for insertafter
+				break;
+			}
+			else temp = temp->GetRight();
+		}
+	}
+}
+
+void NodeList::PrintPath()
+{
+	int size = GetSize();
+	for (int i = 0; i < size; i++)
+	{
+		cout << this->GetByIndex(i).ID;
+		if (i != size-1) cout << " - > ";
+	}
+}
+/* NODELIST CLASS END */
+
+/* ITEM CLASS START */
 Item::Item() {}
 
 // init list
@@ -271,3 +340,4 @@ void Item::Add(Node item)
 	temp->Right = new Item(item); // Create the new object and put its address in the list 
 	temp->Right->Left = temp;
 }
+/* ITEM CLASS END */

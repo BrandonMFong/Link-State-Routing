@@ -139,6 +139,18 @@ class NodeList : private Item
 
 		bool Contains(Node Node);
 
+		/// <summary>
+		/// Inserts 'insert' before 'before'
+		/// </summary>
+		/// <param name="insert"></param>
+		/// <param name="NodeToBePushedUp"></param>
+		void InsertBefore(Node insert, Node before);
+
+		/// <summary>
+		/// Prints the node list
+		/// </summary>
+		void PrintPath();
+
 		//protected:
 		Item* List = nullptr; // this should be the first item in the list 
 };
@@ -152,4 +164,3 @@ struct Path
 	Node* PreviousNode;
 };
 
-//void Dijkstra(NodeList Nodes, int SourceID, int Destination);
