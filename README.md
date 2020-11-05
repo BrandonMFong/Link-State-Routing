@@ -1,7 +1,7 @@
 # Link-State-Routing
 Dijkstra's algorithm is an algorithm for finding the shortest paths between nodes in a graph, which may represent, for example, road networks. It was conceived by computer scientist Edsger W. Dijkstra in 1956 and published three years later.
 
-This project implements Dijkstra's algorithm in c++.  Assuming the network is already established and connections have already been broadcasted across the nodes, the algorithm will figure out the shortest path from Node A to Node B. 
+This project implements Dijkstra's algorithm in c++.  Assuming the network is already established and connections have already been broadcasted across the nodes, such that each node knows its neighbors and their connections. The algorithm will figure out the shortest path from Node A to Node B, where A and B are the node IDs.
 
 ## Setup
 This program relies on an already established network which can be explicitly written out in confg\Net.json.
