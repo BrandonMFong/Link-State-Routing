@@ -12,7 +12,7 @@ using namespace std;
 
 int main()
 {
-	NodeList Nodes = JsonToNodeList("config\\Net.json");
+	NodeList Nodes = JsonToNodeList("config\\NetTwo.json");
 
 	cout << endl;
 	unsigned int size = Nodes.GetSize();

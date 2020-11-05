@@ -1,0 +1,87 @@
+{
+  "Nodes": [
+    {
+      "Node": {
+        "ID": 1,
+        "Connections": [
+          {
+            "ID": 2,
+            "Weight": 5
+          },
+          {
+            "ID": 3,
+            "Weight": 2
+          },
+          {
+            "ID": 4,
+            "Weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 2,
+        "Connections": [
+          {
+            "ID": 1,
+            "Weight": 5
+          },
+          {
+            "ID": 3,
+            "Weight": 4
+          },
+          {
+            "ID": 5,
+            "Weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 3,
+        "Connections": [
+          {
+            "ID": 1,
+            "Weight": 2
+          },
+          {
+            "ID": 2,
+            "Weight": 4
+          },
+          {
+            "ID": 5,
+            "Weight": 4
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 4,
+        "Connections": [
+          {
+            "ID": 1,
+            "Weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 5,
+        "Connections": [
+          {
+            "ID": 2,
+            "Weight": 3
+          },
+          {
+            "ID": 3,
+            "Weight": 4
+          }
+        ]
+      }
+    }
+  ]
+}s
