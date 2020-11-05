@@ -116,7 +116,7 @@ inline NodeList Dijkstra(NodeList Nodes, int SourceID, int Destination)
 	// Traverse the connections  
 	while (1)
 	{
-		Node WorkingNode = UnvisitedNodes->GetNodeByID(WorkingNodeID); // Get working node by ID
+		Node WorkingNode = *UnvisitedNodes->GetNodeByID(WorkingNodeID); // Get working node by ID
 
 		cout << "\nSize of Visited array: " << VisitedNodes->GetSize() << endl;
 		cout << "Size of Unvisited array: " << UnvisitedNodes->GetSize() << endl;
@@ -149,7 +149,7 @@ inline NodeList Dijkstra(NodeList Nodes, int SourceID, int Destination)
 						PathTable[k].ShortestDistance = TempDistance;
 
 						// Instead of giving the address to the pointer, give it the value
-						*PathTable[k].PreviousNode = Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
+						*PathTable[k].PreviousNode = *Nodes.GetNodeByID(WorkingNodeID); // we visited this vector by Working node
 					}
 					break;
 				}
@@ -168,7 +168,7 @@ inline NodeList Dijkstra(NodeList Nodes, int SourceID, int Destination)
 			}
 		}
 
-		VisitedNodes->Add(UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
+		VisitedNodes->Add(*UnvisitedNodes->GetNodeByID(WorkingNodeID)); // Mark visited
 		UnvisitedNodes->RemoveNodeByID(WorkingNodeID);
 
 		// if the next node to evaluate is the destination, stop algorithm 

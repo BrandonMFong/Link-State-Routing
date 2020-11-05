@@ -2,7 +2,9 @@
 //
 
 #include "dikjstra.h"
-
+#include "json.hpp"
+#include <sstream>
+using json = nlohmann::json;
 
 // Recall that in Link state routing all switches send out a broadcast of all links
 // So we assume we know every node and its connection 
@@ -10,51 +12,120 @@
 // TODO make this configurable	
 int main()
 {
-	// Following figure 18.9 from text 
-	// Ref res/LinkGraph.png
-	// Initiliaze nodes 
-	Node Node1(1); // Node 1
-	Node Node2(2); // Node 2
-	Node Node3(3); // Node 3
-	Node Node4(4); // Node 4
-	Node Node5(5); // Node 5
-	Node Node6(6); // Node 6
-	Node Node7(7); // Node 7
-
-	// Set connections 
-	// Node 1
-	Node1.AddConnection(&Node5, 9);
-	// Node 2
-	Node2.AddConnection(&Node3, 3);
-	Node2.AddConnection(&Node5, 6);
-	Node2.AddConnection(&Node6, 8);
-	// Node 3 
-	Node3.AddConnection(&Node2, 3);
-	Node3.AddConnection(&Node4, 11);
-	Node3.AddConnection(&Node6, 2);
-	// Node 4
-	Node4.AddConnection(&Node3, 11);
-	Node4.AddConnection(&Node7, 3);
-	// Node 5 
-	Node5.AddConnection(&Node1, 9);
-	Node5.AddConnection(&Node2, 6);
-	// Node 6
-	Node6.AddConnection(&Node2, 8);
-	Node6.AddConnection(&Node3, 2);
-	Node6.AddConnection(&Node7, 5);
-	// Node 7
-	Node7.AddConnection(&Node4, 3);
-	Node7.AddConnection(&Node6, 5);
-
-	// Organize in array 
+	std::ifstream i("Net.json");
+	json j;
+	i >> j;
 	NodeList Nodes = NodeList();
-	Nodes.Add(Node1);
-	Nodes.Add(Node2);
-	Nodes.Add(Node3);
-	Nodes.Add(Node4);
-	Nodes.Add(Node5);
-	Nodes.Add(Node6);
-	Nodes.Add(Node7);
+
+	// init router 
+	for (auto& N : j["Nodes"]) 
+	{
+		// the same code as range for
+		for (auto& n : N["Node"].items()) 
+		{
+			//if (Node.key() == "ID") cout << "ID is " << Node.value() << endl;
+			if (n.key() == "ID")
+			{
+				Node node(n.value());
+				Nodes.Add(node);
+			}
+		}
+	}
+
+	// establish connections
+	for (auto& N : j["Nodes"]) 
+	{
+		// the same code as range for
+		int ID;
+		json Connections;
+		bool CaughtID = false, CaughtConnections = false;
+		for (auto& n : N["Node"].items()) 
+		{
+			if (n.key() == "ID")
+			{
+				cout << "Caught ID" << endl;
+				ID = n.value();
+				CaughtID = true;
+			}
+			if (n.key() == "Connections") // how do I determine the ID? 
+			{
+				cout << "Caught Connections" << endl;
+				Connections = n;
+				CaughtConnections = true;
+			}
+		}
+
+		// Process the information
+		if (CaughtID && CaughtConnections)
+		{
+			cout << "Connection for node " << ID << endl;
+			for (auto& Connection : Connections["Connections"].items())
+			{
+				//std::cout << Connection.key() << " : " << Connection.value() << "\n";
+				json Conn = Connection.value();
+				cout << "Caught connection, ID is " << Conn["ID"] << ", and its weight " << Conn["Weight"] << endl;
+
+				// Get ID
+				stringstream numstrID(Conn["ID"].dump());
+				int numID = 0;
+				numstrID >> numID;
+
+				// Get Weight
+				stringstream numstrWeight(Conn["Weight"].dump());
+				int numWeight = 0;
+				numstrWeight >> numWeight;
+
+				Nodes.GetNodeByID(ID)->AddConnection(Nodes.GetNodeByID(numID), numWeight);
+			}
+		}
+	}
+
+
+	//// Following figure 18.9 from text 
+	//// Ref res/LinkGraph.png
+	//// Initiliaze nodes 
+	//Node Node1(1); // Node 1
+	//Node Node2(2); // Node 2
+	//Node Node3(3); // Node 3
+	//Node Node4(4); // Node 4
+	//Node Node5(5); // Node 5
+	//Node Node6(6); // Node 6
+	//Node Node7(7); // Node 7
+
+	//// Set connections 
+	//// Node 1
+	//Node1.AddConnection(&Node5, 9);
+	//// Node 2
+	//Node2.AddConnection(&Node3, 3);
+	//Node2.AddConnection(&Node5, 6);
+	//Node2.AddConnection(&Node6, 8);
+	//// Node 3 
+	//Node3.AddConnection(&Node2, 3);
+	//Node3.AddConnection(&Node4, 11);
+	//Node3.AddConnection(&Node6, 2);
+	//// Node 4
+	//Node4.AddConnection(&Node3, 11);
+	//Node4.AddConnection(&Node7, 3);
+	//// Node 5 
+	//Node5.AddConnection(&Node1, 9);
+	//Node5.AddConnection(&Node2, 6);
+	//// Node 6
+	//Node6.AddConnection(&Node2, 8);
+	//Node6.AddConnection(&Node3, 2);
+	//Node6.AddConnection(&Node7, 5);
+	//// Node 7
+	//Node7.AddConnection(&Node4, 3);
+	//Node7.AddConnection(&Node6, 5);
+
+	//// Organize in array 
+	//NodeList Nodes = NodeList();
+	//Nodes.Add(Node1);
+	//Nodes.Add(Node2);
+	//Nodes.Add(Node3);
+	//Nodes.Add(Node4);
+	//Nodes.Add(Node5);
+	//Nodes.Add(Node6);
+	//Nodes.Add(Node7);
 
 	unsigned int size = Nodes.GetSize();
 

@@ -121,12 +121,12 @@ Node NodeList::GetByIndex(int index)
 		{
 			temp = temp->GetRight();
 		}
-		return temp->GetNode();
+		return *temp->GetNode();
 	}
 	else return *(new Node());
 }
 
-Node NodeList::GetNodeByID(int ID)
+Node * NodeList::GetNodeByID(int ID)
 {
 	Node* results = new Node(); // return value 
 	Item* temp = List; // temp 
@@ -134,11 +134,10 @@ Node NodeList::GetNodeByID(int ID)
 
 	for (int i = 0; i < size; i++)
 	{
-		//if (temp->GetNode()->ID == ID) { results = temp->GetNode(); break; }}
-		if (temp->GetNode().ID == ID) { return temp->GetNode();}
+		if (temp->GetNode()->ID == ID) { return temp->GetNode();}
 		else { temp = temp->GetRight(); }
 	}
-	return *results;
+	return results;
 }
 
 void NodeList::RemoveNodeByID(int ID)
@@ -151,7 +150,7 @@ void NodeList::RemoveNodeByID(int ID)
 	{
 		// If I found the item with the correct node id, then take that out of the list and close it
 		// I need to remove the item from memory
-		if (temp->GetNode().ID == ID) 
+		if (temp->GetNode()->ID == ID) 
 		{ 
 			// I am wondering if there is a more efficient way to determine if the temp var is the first or last
 
@@ -220,7 +219,7 @@ void NodeList::Copy(NodeList original)
 	Item* temp =  original.List;
 	while (1)
 	{
-		Add(temp->GetNode());
+		Add(*temp->GetNode());
 		if (temp->GetRight() == nullptr) break;
 		else { temp = temp->GetRight(); }
 	}
@@ -234,7 +233,7 @@ bool NodeList::Contains(Node Node)
 
 	for (int i = 0; i < size; i++)
 	{
-		if (temp->GetNode().ID == Node.ID) { found = true; break; }
+		if (temp->GetNode()->ID == Node.ID) { found = true; break; }
 		else { temp = temp->GetRight(); }
 	}
 	return found;
@@ -253,7 +252,7 @@ void NodeList::InsertBefore(Node insert, Node before)
 			// 1 - if the node I found is the first in the list.  Therefore I need to reset List pointer 
 			// 2 - If the node I found is the last in the list or in the middle.  This would mean I need to rearrange pointers 
 			// TODO implement 1 and 2
-			if (temp->GetNode().ID == before.ID)
+			if (temp->GetNode()->ID == before.ID)
 			{
 				Item* insertee = new Item(insert);
 				if (temp->GetLeft() == nullptr) // case 1
@@ -323,7 +322,7 @@ bool Item::isLast(){ return (Right == nullptr) ? true : false; }
 // Get
 Item* Item::GetRight() { return Right; }
 Item* Item::GetLeft() { return Left; }
-Node Item::GetNode() { return Current; }
+Node * Item::GetNode() { return &Current; }
 
 // Set
 void Item::SetRight(Item* value) { Right = value; }

@@ -95,7 +95,7 @@ class Item
 		// Get
 		Item* GetRight();
 		Item* GetLeft();
-		Node GetNode();
+		Node* GetNode();
 
 		// Set
 		void SetRight(Item* value);
@@ -125,7 +125,7 @@ class NodeList : private Item
 		// 0 index is true 
 		Node GetByIndex(int index);
 
-		Node GetNodeByID(int ID);
+		Node * GetNodeByID(int ID);
 
 		void RemoveNodeByID(int ID);
 

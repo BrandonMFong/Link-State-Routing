@@ -1,0 +1,117 @@
+{
+  "Nodes": [
+    {
+      "Node": {
+        "ID": 1,
+        "Connections": [
+          {
+            "ID": 5,
+            "Weight": 9
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 2,
+        "Connections": [
+          {
+            "ID": 3,
+            "Weight": 3
+          },
+          {
+            "ID": 5,
+            "Weight": 6
+          },
+          {
+            "ID": 6,
+            "Weight": 8
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 3,
+        "Connections": [
+          {
+            "ID": 2,
+            "Weight": 3
+          },
+          {
+            "ID": 4,
+            "Weight": 11
+          },
+          {
+            "ID": 6,
+            "Weight": 2
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 4,
+        "Connections": [
+          {
+            "ID": 3,
+            "Weight": 11
+          },
+          {
+            "ID": 7,
+            "Weight": 3
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 5,
+        "Connections": [
+          {
+            "ID": 1,
+            "Weight": 9
+          },
+          {
+            "ID": 2,
+            "Weight": 6
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 6,
+        "Connections": [
+          {
+            "ID": 2,
+            "Weight": 8
+          },
+          {
+            "ID": 3,
+            "Weight": 2
+          },
+          {
+            "ID": 7,
+            "Weight": 5
+          }
+        ]
+      }
+    },
+    {
+      "Node": {
+        "ID": 7,
+        "Connections": [
+          {
+            "ID": 4,
+            "Weight": 3
+          },
+          {
+            "ID": 6,
+            "Weight": 5
+          }
+        ]
+      }
+    }
+  ]
+}
