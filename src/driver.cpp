@@ -1,7 +1,7 @@
 // Link-State-Routing.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "dikjstra.h"
+#include "dijkstra.h"
 #include "config.h"
 #include "Node.h"
 #include <sstream>

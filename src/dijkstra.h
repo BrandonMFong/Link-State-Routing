@@ -1,5 +1,5 @@
-#ifndef DIKJSTRA_H
-#define DIKJSTRA_H
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
 
 #include "Node.h"
 
