@@ -30,10 +30,18 @@ This program relies on an already established network which can be explicitly wr
 ```
 # Test 1
 ## Graph 
-![Graph](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/LinkGraph.png)
+![Graph](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/LinkGraph1.png)
 
 ## Program 
 ![Dijkstra program](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/PathFrom3To4.PNG)
+
+# Test 1
+Let A=1, B=2, C=3, D=4, and E=5
+## Graph 
+![Graph](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/LinkGraph2.png)
+
+## Program 
+![Dijkstra program](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/Net2_4To2.PNG)
 
 # Author
 Brandon Fong
