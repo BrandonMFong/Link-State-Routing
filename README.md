@@ -35,8 +35,5 @@ This program relies on an already established network which can be explicitly wr
 ## Program 
 ![Dijkstra program](https://github.com/BrandonMFong/Link-State-Routing/blob/main/res/PathFrom3To4.PNG)
 
-# TODO
-- Allow network to be configured before compiler runs
-
 # Author
 Brandon Fong
