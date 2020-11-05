@@ -1,7 +1,0 @@
-{
-  "Test": "Hello World!",
-  "Nodes": {
-    { "Node": { "ID": "A" } },
-    { "Node": { "ID": "B" } }
-  }
-}

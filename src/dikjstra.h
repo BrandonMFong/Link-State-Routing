@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DIKJSTRA_H
+#define DIKJSTRA_H
+
 #include "Node.h"
 
 using namespace std;
@@ -180,3 +182,5 @@ inline NodeList Dijkstra(NodeList Nodes, int SourceID, int Destination)
 
 	return SourceToDestination;
 }
+
+#endif

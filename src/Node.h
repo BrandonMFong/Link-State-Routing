@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef NODE_H
+#define NODE_H
 
 #include <iostream>
 #include <fstream>      // std::ifstream
@@ -125,6 +125,12 @@ class NodeList : private Item
 		// 0 index is true 
 		Node GetByIndex(int index);
 
+		/// <summary>
+		/// Just to note, we are returning a pointer because if we are 
+		/// trying to get the Node and edit that object in the larger scope
+		/// </summary>
+		/// <param name="ID"></param>
+		/// <returns></returns>
 		Node * GetNodeByID(int ID);
 
 		void RemoveNodeByID(int ID);
@@ -164,3 +170,4 @@ struct Path
 	Node* PreviousNode;
 };
 
+#endif

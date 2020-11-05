@@ -1,4 +1,5 @@
-
+#ifndef NODE_CPP
+#define NODE_CPP
 
 #include <iostream>
 #include <fstream>      // std::ifstream
@@ -340,3 +341,5 @@ void Item::Add(Node item)
 	temp->Right->Left = temp;
 }
 /* ITEM CLASS END */
+
+#endif
